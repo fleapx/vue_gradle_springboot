@@ -6,6 +6,23 @@ Vue.use(VueRouter);
 
 const routers = [
   {
+    path: "/test/index",
+    meta: {
+      title: "smallsnail-wh"
+    },
+    component: resolve => require(["./views/test.vue"], resolve),
+    children: [
+      {
+        path: "",
+        name: "qq-home",
+        component: resolve => require(["./views/template/home.vue"], resolve),
+        meta: {
+          title: "home"
+        }
+      }
+    ]
+  },
+  {
     path: "/image-capture",
     component: resolve => require(["./views/template/image-capture.vue"], resolve)
   },

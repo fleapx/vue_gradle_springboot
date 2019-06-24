@@ -1,48 +1,49 @@
 <template>
     <div class="home content-background">
-        <div>
-            <Carousel autoplay v-model="value2" loop>
-                <CarouselItem v-for="(item,index) in bannerList" :key="index">
-                    <router-link :to="('/page/detail/'+item.id)">
-                        <img :style="{height:'550px'}" class="images-con" v-bind:src="(item.image)">
-                    </router-link>
-                </CarouselItem>
-            </Carousel>
-        </div>
-        <div v-if="flage"
-             style="background: #f5f7f9;padding: 24px 50px;color: #495060;font-size: 14px;text-align: center;">
-            <span>未找到符合条件的结果</span>
-        </div>
-        <div class="box-flex flex-direction-column margin-top-2">
-            <div class="box-flex width-80 margin-auto" v-for="(A,index) in homeArticle">
-                <div class="box-flex width-100" v-if="index%2==0">
-                    <div class="flex-1">
-                        <router-link :to="('/page/detail/'+A.id)">
-                            <img class="images-con imgpic" v-bind:src="(A.image)">
-                        </router-link>
-                    </div>
-                    <div class="box-flex flex-1 padding-all flex-direction-column">
-                        <router-link :to="('/page/detail/'+A.id)">
-                            <span class="tirtleFont lineThrou">{{A.title}}</span>
-                        </router-link>
-                        <span class="contentFont">{{A.info}}</span>
-                    </div>
-                </div>
-                <div class="box-flex width-100" v-else>
-                    <div class="box-flex flex-1 padding-all flex-direction-column">
-                        <router-link :to="('/page/detail/'+A.id)">
-                            <span class="tirtleFont lineThrou">{{A.title}}</span>
-                        </router-link>
-                        <span class="contentFont">{{A.info}}</span>
-                    </div>
-                    <div class="flex-1">
-                        <router-link :to="('/page/detail/'+A.id)">
-                            <img class="images-con imgpic" v-bind:src="(A.image)">
-                        </router-link>
-                    </div>
-                </div>
+      <div>
+        <Carousel autoplay v-model="value2" loop>
+          <CarouselItem v-for="(item,index) in bannerList" :key="index">
+              <router-link :to="('/page/detail/'+item.id)">
+                <img  class="banner-images" v-bind:src="(item.image)">
+              </router-link>
+          </CarouselItem>
+        </Carousel>
+      </div>
+
+      <div v-if="flage" class="search-nothing">
+        <span>未找到符合条件的结果</span>
+      </div>
+
+      <div class="interest">
+        <div class="info" v-for="(A,index) in homeArticle">
+          <div class="box-flex width-100" v-if="index%2==0">
+            <div class="image">
+                <router-link :to="('/page/detail/'+A.id)">
+                  <img v-bind:src="(A.image)">
+                </router-link>
             </div>
+            <div class="text-content">
+                <router-link :to="('/page/detail/'+A.id)">
+                  <span class="title">{{A.title}}</span>
+                </router-link>
+                <span class="content">{{A.info}}</span>
+            </div>
+          </div>
+          <div class="box-flex width-100" v-else>
+              <div class="text-content">
+                  <router-link :to="('/page/detail/'+A.id)">
+                    <span class="title">{{A.title}}</span>
+                  </router-link>
+                  <span class="content">{{A.info}}</span>
+              </div>
+              <div class="image">
+                  <router-link :to="('/page/detail/'+A.id)">
+                    <img v-bind:src="(A.image)">
+                  </router-link>
+              </div>
+          </div>
         </div>
+      </div>
 
     </div>
 </template>
@@ -121,38 +122,87 @@ export default {
           );
       }
     }
-    // login(formLogin){
-    //     this.$refs[formLogin].validate((valid) => {
-    //         if(valid){
-    //             this.$store.dispatch('users/userLogin',{"user_name":this.formLogin.userName,"user_password":this.formLogin.password,"router":this.$router});
-    //         }
-    //     })
-    // }
   }
 };
 </script>
-<style>
-.content-background {
-  background: #fff;
+<style scoped>
+.ivu-carousel {
+  height: 550px;
 }
-.box-flex .imgpic {
+.banner-images {
+  width: 100%;
+  height: auto;
+}
+.interest {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  margin-top: 3%;
+}
+.interest .info {
+  display: flex;
+  display: -webkit-flex;
+  width: 80%;
+  margin: 0 auto;
+}
+.interest .info .image{
+  flex: 1;
+}
+.interest .info .image img {
+  width: 100%;
   transition: 0.7s all;
   opacity: 0.8;
 }
-
-.box-flex .imgpic:hover {
+.interest .info .image img:hover {
   opacity: 1;
   box-shadow: 1px 1px 20px #333;
   transform: scale(1.1, 1.1);
   cursor: pointer;
 }
-
-.lineThrou {
+.interest .info .text-content {
+  display: flex;
+  display: -webkit-flex;
+  flex: 1;
+  padding: 3%;
+  flex-direction: column;
+}
+.interest .info .text-content .title {
+  font-size: 140%;
   transition: 0.8s all;
 }
-
-.lineThrou:hover {
+.interest .info .text-content .title:hover {
   text-decoration: line-through;
   cursor: pointer;
+}
+.interest .info .text-content .content {
+  font-size: 100%;
+}
+.interest .info .text-content a{
+  text-decoration: none;
+  color: #333;
+}
+.interest .info .text-content a:hover{
+  color: #57a3f3;
+}
+.interest .info .text-content a:link, a:visited{
+  text-decoration: none;
+  border: 0;
+}
+.search-nothing {
+  background: #f5f7f9;
+  padding: 24px 50px;
+  color: #495060;
+  font-size: 14px;
+  text-align: center;
+}
+.box-flex {
+  display: flex;
+  display: -webkit-flex;
+}
+.width-100 {
+  width: 100%;
+}
+.content-background {
+  background: #fff;
 }
 </style>
