@@ -72,7 +72,7 @@ public class ResponseWrapper<T> {
                 "status='" + status + '\'' +
                 ", message='" + message + '\'';
         if (data instanceof List) {
-            if(((List) data).size()>5){
+            if(((List) data).size()>3){
                 return returnString +
                         ", dataSize=" + ((List) data).size() +
                         '}';

@@ -1,201 +1,105 @@
-<style scoped>
-.layout {
-  border: 1px solid #d7dde4;
-  background: #f5f7f9;
-  position: relative;
-  border-radius: 4px;
-  overflow: hidden;
-  min-width: 1000px;
-}
-
-.layout-logo {
-  float: left;
-}
-
-.layout-search {
-  height: 30px;
-  border-radius: 3px;
-  float: left;
-  position: relative;
-  left: 30px;
-}
-
-.layout-title {
-  margin-left: 30px;
-  height: inherit;
-  float: left;
-}
-
-.layout-title .home-text{
-  color: rebeccapurple;
-  font-weight: bold;
-}
-
-.layout-title .home-text:hover{
-  color: #2d8cf0;
-}
-
-.menu-layout {
-  height:65px;
-  width:100%;
-}
-.layout-nav {
-  height: inherit;
-  float: right;
-}
-
-.layout-footer-center {
-  text-align: center;
-  background: #fff;
-}
-
-.demo-spin-icon-load {
-  animation: ani-demo-spin 1s linear infinite;
-}
-
-.avatar-badge-wrapper {
-  position: relative;
-  float: right;
-  cursor: pointer;
-}
-
-.avatar-badge-wrapper .msg-num {
-  position: absolute;
-  top: 9px;
-  right: -12px;
-  color: #fff;
-  background-color: #2db7f5;
-  border-radius: 50%;
-  padding: 2px 5px;
-  line-height: 1;
-}
-
-@keyframes ani-demo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-</style>
 <template>
-    <div class="layout">
-        <Layout>
-            <Header style="position: absolute;width: 100%;background:#fff;padding:0 0;z-index: 1000; ">
-              <Menu mode="horizontal" theme="light" class="menu-layout" active-name="interest"
-                    @on-select="m=>{menuSelect(m)}">
-                  <div style="width: 95%;margin: 0 auto">
-                      <div class="layout-logo">
-                          <a @click="backHome()">
-                              <img src="../../images/logo.jpg" style="width: 50px;height: 50px;" align="absmiddle" />
-                          </a>
-                      </div>
-                      <div class="layout-title">
-                          <MenuItem name="interest">
-                            <span class="home-text">
-                              主页
-                            </span>
-                          </MenuItem>
-                          <MenuItem name="article">
-                            <span class="home-text">
-                              文章
-                            </span>
-                          </MenuItem>
-                      </div>
-                      <div class="layout-search">
-                          <Input v-model="searchValue" icon="android-search" placeholder="Enter something..."
-                                 @on-enter="search()" />
-                      </div>
-                      <div v-if="loginFlag" class="layout-nav">
-                          <MenuItem name="1">
-                              {{user.name}}
-                          </MenuItem>
-                          <MenuItem name="2">
-                              <Icon type="ios-mail"></Icon>
-                              邮件
-                          </MenuItem>
-                          <Submenu name="3">
-                            <template slot="title">
-                                <Icon type="md-list-box" />
-                                文章
-                            </template>
-                            <MenuItem name="31">
-                              <Icon type="md-create" />
-                              写文章
-                            </MenuItem>
-                            <MenuItem name="32">
-                              <Icon type="md-list" />
-                              我的文章
-                            </MenuItem>
-                        </Submenu>
-                          <MenuItem name="4">
-                              <Icon type="md-log-out"></Icon>
-                              退出
-                          </MenuItem>
-                          <MenuItem name="5" v-if="consoleFlag">
-                              <Icon type="md-settings"></Icon>
-                              控制台
-                          </MenuItem>
-                      </div>
-                      <div  type="success" class="avatar-badge-wrapper" @click="toMessages">
+    <div class="index">
+      <el-container>
+        <el-header class="header" height="62">
+          <el-row :gutter="24">
+            <el-col :span="10">
+              <div class="layout-logo">
+                  <a @click="backHome()">
+                      <img src="../../images/logo.jpg" style="width: 50px;height: 50px;" align="absmiddle" />
+                  </a>
+              </div>
+              <el-menu 
+                text-color="#66339980"
+                active-text-color="#663399"
+                :default-active="activeIndex" 
+                class="left-menu" 
+                mode="horizontal" 
+                @select="menuSelect">
+                <el-menu-item index="home">首页</el-menu-item>
+                <el-menu-item index="article-home">文章</el-menu-item>
+              </el-menu>
+              <el-input class="search-input" v-model="searchValue" placeholder="Enter something..." @keyup.enter.native="search" size="small">
+                <i class="el-icon-search el-input__icon" slot="suffix" @click="search"></i>
+              </el-input>
+            </el-col>
+            <el-col :span="14">
+              <el-menu 
+                active-text-color="#409EFF"
+                v-if="loginFlag"
+                class="right-menu" 
+                mode="horizontal" 
+                @select="menuSelect">
+                <el-menu-item index="name">{{user.name}}</el-menu-item>
+                <el-menu-item index="email"><i class="el-icon-message"></i>邮件</el-menu-item>
+                <el-submenu index="article">
+                  <template slot="title"><i class="el-icon-tickets"></i>文章</template>
+                  <el-menu-item index="write-article" class="sub-menu-item"><i class="el-icon-edit"></i>写文章</el-menu-item>
+                  <el-menu-item index="my-article" class="sub-menu-item"><i class="el-icon-document"></i>我的文章</el-menu-item>
+                </el-submenu>
+                <el-menu-item index="login-out"><i class="el-icon-switch-button"></i>退出</el-menu-item>
+                <el-menu-item index="console" v-if="consoleFlag"><i class="el-icon-s-tools"></i>控制台</el-menu-item>
+              </el-menu>
+              <el-badge :value="unreadMsgCount" class="user-head" type="primary" v-if="loginFlag">
+                <img :src="user.headimg" @click="menuSelect('message')"/>
+              </el-badge>
+            </el-col>
+            <div class="login" v-if="!loginFlag" @click="menuSelect('login')">
+              <i class="el-icon-user-solid"></i>登陆
+            </div>
+            </el-col>
+          </el-row>
+        </el-header>
 
-                          <img v-if="loginFlag"
-                               style="width: 30px;height: 30px; margin-top: 16px;border-radius: 100%;"
-                               :src="user.headimg" />
+        <el-main>
+          <router-view></router-view>
+        </el-main>
 
-                          <span v-if="unreadMsgCount > 0"  class="msg-num">{{unreadMsgCount}}</span>
+        <el-footer class="layout-footer-center" height="100">
+          <div>
+              <a href="https://github.com/smallsnail-wh" target="_blank">
+                  <Icon style="color: rebeccapurple;" size="40" type="logo-github"></Icon>
+              </a>
+          </div>
+          <p>Copyright &copy; 2019 smallsail-wh</p>
+        </el-footer>
+      </el-container>
 
-                      </div>
-
-                      <div v-if="!loginFlag" class="layout-nav">
-                          <MenuItem name="6">
-                              <Icon type="md-log-in"></Icon>
-                              登录
-                          </MenuItem>
-                      </div>
-                  </div>
-              </Menu>
-            </Header>
-            <Content :style="{margin: '80px 0 40px 0'}">
-                <router-view></router-view>
-            </Content>
-            <Footer class="layout-footer-center">
-                <div>
-                    <a href="https://github.com/smallsnail-wh" target="_blank">
-                        <Icon style="color: rebeccapurple;" size="40" type="logo-github"></Icon>
-                    </a>
-                </div>
-                <p>2018-2020 &copy; smallsail-wh</p>
-            </Footer>
-        </Layout>
-
-        <Modal :mask-closable="false" :visible.sync="emailModal" :loading="loading" v-model="emailModal" width="600"
-               title="联系管理员" @on-ok="emailOk('email')" @on-cancel="cancel()">
-            <Form ref="email" :rules="emailRule" :model="email" :label-width="80">
-                <FormItem label="标题" prop="title">
-                    <Input v-model="email.title" placeholder="请输入标题" />
-                </FormItem>
-                <FormItem label="email" prop="email">
-                    <Input v-model="email.email" placeholder="请输入email" />
-                </FormItem>
-                <FormItem label="姓名" prop="name">
-                    <Input v-model="email.name" placeholder="请输入姓名" />
-                </FormItem>
-                <FormItem label="内容" prop="content">
-                    <Input v-model="email.content" type="textarea" :autosize="{minRows: 2,maxRows: 5}"placeholder="Enter something..." />
-                </FormItem>
-            </Form>
-        </Modal>
+      <el-dialog
+        title="联系管理员"
+        :visible.sync="emailModal"
+        :before-close="handleClose"
+        width="600px"
+        :close-on-click-modal="false">
+        <span>
+          <el-form :model="email" :rules="emailRule" ref="email" label-width="80px">
+            <el-form-item label="标题" prop="title">
+              <el-input v-model="email.title"></el-input>
+            </el-form-item>
+            <el-form-item label="email" prop="email">
+              <el-input v-model="email.email"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="email.name"></el-input>
+            </el-form-item>
+            <el-form-item label="内容" prop="content">
+              <el-input v-model="email.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
+            </el-form-item>
+          </el-form>
+        </span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="emailModal = false">取 消</el-button>
+          <el-button type="primary" @click="emailOk('email')">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
 </template>
 <script>
 export default {
   data() {
     return {
+      activeIndex: null,
+
       loginFlag: false,
       consoleFlag: false,
       loading: true,
@@ -217,38 +121,29 @@ export default {
       },
       emailRule: {
         title: [
-          {
-            type: "string",
-            required: true,
-            message: "请输入密码",
-            trigger: "blur"
-          }
+          { required: true, message: '请输入密码', trigger: 'blur' }
         ],
         email: [
           { required: true, message: "输入邮箱", trigger: "blur" },
           { type: "email", message: "输入正确的邮箱格式", trigger: "blur" }
         ],
-        passwordAgain: [
-          {
-            type: "string",
-            required: true,
-            message: "请输入再次输入密码",
-            trigger: "blur"
-          }
-        ],
         name: [
-          {
-            type: "string",
-            required: true,
-            message: "请输入姓名",
-            trigger: "blur"
-          }
+          { required: true, message: '请输入姓名', trigger: 'blur' }
         ],
-        content: [{ required: true, message: "请输入内容", trigger: "blur" }]
+        content: [
+          { required: true, message: "请输入内容", trigger: "blur" }
+        ]
       }
     };
   },
   created() {
+    if(this.$route.name == "home" || this.$route.name == "page-home-title"|| this.$route.name == "page-home"){
+      this.activeIndex = 'home';
+    }else if(this.$route.name == "article-home"){
+      this.activeIndex = 'article-home';
+    }else {
+      this.activeIndex = null;
+    }
     var code = this.$route.query.code;
     var state = this.$route.query.state;
     if (this.$store.getters._isMobile) {
@@ -296,7 +191,10 @@ export default {
         })
         .catch(
           function(error) {
-            this.$Message.error("无权限");
+            this.$message({
+              message: '无权限',
+              type: 'error'
+            });
           }.bind(this)
         );
     },
@@ -313,32 +211,31 @@ export default {
         this.$router.push("/article" + "?searchValue=" + this.searchValue);
       }
     },
-    menuSelect(e) {
-      if (e == 1) {
-        this.$router.push("/page/user");
-      } else if (e == 2) {
-        this.emailModal = true;
-      } else if (e == 31) {
-        this.$router.push("/article/create");
-      } else if (e == 32) {
-        this.$router.push("/article/user");
-      } else if (e == 4) {
-        this.$store.dispatch("users/loginOUt", { router: this.$router });
-      } else if (e == 5) {
-        this.$router.push("/base");
-      } else if (e == 6) {
-        this.$router.push("/login");
-      } else if (e == "interest") {
+    menuSelect(key) {
+      if(key == 'home'){
         this.$router.push("/");
-      } else if (e == "article") {
+      }else if(key == 'article-home'){
         this.$router.push("/article");
+      }else if(key == 'message'){
+        this.$router.push({ path: "/page/messages" });
+      }else if(key == 'name'){
+        this.$router.push("/page/user");
+      }else if(key == 'email'){
+        this.emailModal = true;
+      }else if(key == 'write-article'){
+        this.$router.push("/article/create");
+      }else if(key == 'my-article'){
+        this.$router.push("/article/user");
+      }else if(key == 'login-out'){
+        this.$store.dispatch("users/loginOUt", { router: this.$router });
+      }else if(key == 'console'){
+        this.$router.push("/base");
+      }else if(key == 'login'){
+        this.$router.push("/login");
       }
     },
     backHome() {
       this.$router.push("/page/home");
-    },
-    cancel() {
-      this.$Message.info("点击了取消");
     },
     emailOk(email) {
       this.$refs[email].validate(valid => {
@@ -350,50 +247,34 @@ export default {
           })
             .then(
               function(response) {
-                this.$Message.info("发送成功");
+                this.$message({
+                  message: '发送成功',
+                  type: 'success'
+                });
+                this.emailModal = false;
               }.bind(this)
             )
             .catch(function(error) {
               alert(error);
             });
-          this.emailModal = false;
         } else {
-          this.$Message.error("表单验证失败!");
-          setTimeout(() => {
-            this.loading = false;
-            this.$nextTick(() => {
-              this.loading = true;
-            });
-          }, 1000);
+          return false;
         }
       });
     },
     /*登录*/
     login(code, state) {
       if (code != null && code != "" && state != null && state != "") {
-        this.$Spin.show({
-          render: h => {
-            return h("div", [
-              h("Icon", {
-                style: {
-                  animation: "ani-demo-spin 1s linear infinite"
-                },
-                props: {
-                  type: "load-c",
-                  size: 18
-                }
-              }),
-              h("div", "正在登录，请等待...")
-            ]);
-          }
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
         });
-        setTimeout(() => {
-          this.$Spin.hide();
-        }, 10000);
         if (state == "github") {
-          this.githubLogin(code);
+          this.githubLogin(code,loading);
         } else if (state == "qq") {
-          this.qqLogin(code);
+          this.qqLogin(code),loading;
         } else {
           this.$router.push({ path: "/" });
           location.reload();
@@ -403,7 +284,7 @@ export default {
       }
     },
     /*github登录*/
-    githubLogin(code) {
+    githubLogin(code,loading) {
       this.axios({
         method: "post",
         url: "/authentication/github",
@@ -417,6 +298,7 @@ export default {
       })
         .then(
           function(response) {
+            loading.close();
             localStorage.setItem(
               "currentUser_token",
               response.data.access_token
@@ -433,12 +315,16 @@ export default {
         )
         .catch(
           function(error) {
-            this.$Message.error("登陆失败");
+            loading.close();
+            this.$message({
+              message: '登陆失败',
+              type: 'error'
+            });
           }.bind(this)
         );
     },
     /*qq登录*/
-    qqLogin(code) {
+    qqLogin(code,loading) {
       this.axios({
         method: "post",
         url: "/authentication/qq",
@@ -452,6 +338,7 @@ export default {
       })
         .then(
           function(response) {
+            loading.close();
             localStorage.setItem(
               "currentUser_token",
               response.data.access_token
@@ -469,15 +356,165 @@ export default {
         )
         .catch(
           function(error) {
-            this.$Message.error("登陆失败");
+            loading.close();
+            this.$message({
+              message: '登陆失败',
+              type: 'error'
+            });
           }.bind(this)
         );
     },
-
-    toMessages() {
-      console.log("to messages page");
-      this.$router.push({ path: "/page/messages" });
-    }
   }
 };
 </script>
+<style >
+.el-menu--popup {
+  min-width: 0;
+}
+</style>
+<style scoped>
+.index {
+  min-width: 1000px;
+  background: #f5f7f9;
+}
+.login {
+  float: right;
+  height: 60px;
+  line-height: 60px;
+  margin: 0;
+  font-size: 14px;
+  padding: 0 20px;
+  cursor: pointer;
+}
+.login:hover {
+  color: #409EFF;
+}
+.login i {
+  margin-right: 5px;
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+  vertical-align: middle;
+  color: #409EFF;
+}
+.el-menu.el-menu--horizontal {
+  border-bottom: solid 0 #e6e6e6;
+}
+.header {
+  border-bottom: solid 1px #e6e6e6;
+  padding-bottom: 2px;
+  background: #fff;
+}
+.layout {
+  border: 1px solid #d7dde4;
+  background: #f5f7f9;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 1000px;
+}
+
+.layout-logo {
+  float: left;
+  padding: 5px;
+}
+.left-menu {
+  font-weight: bold;
+  float: left;
+  height: 60px;
+  margin-left: 10px;
+}
+.search-input {
+  float: left;
+  width: 160px;
+  margin: 14px 0 14px 20px;
+}
+.right-menu {
+  float: right;
+  height: 60px;
+}
+.user-head {
+  margin-top: 15px;
+  float: right;
+}
+.user-head img {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  cursor: pointer;
+}
+.sub-menu-item {
+  width: 117px;
+}
+
+.layout-search {
+  height: 30px;
+  border-radius: 3px;
+  float: left;
+  position: relative;
+  left: 30px;
+}
+
+.layout-title {
+  margin-left: 30px;
+  height: inherit;
+  float: left;
+}
+
+.layout-title .home-text{
+  color: rebeccapurple;
+  font-weight: bold;
+}
+
+.layout-title .home-text:hover{
+  color: #2d8cf0;
+}
+
+.menu-layout {
+  height:65px;
+  width:100%;
+}
+.layout-nav {
+  height: inherit;
+  float: right;
+}
+
+.layout-footer-center {
+  text-align: center;
+  background: #fff;
+  padding: 20px;
+}
+
+.demo-spin-icon-load {
+  animation: ani-demo-spin 1s linear infinite;
+}
+
+.avatar-badge-wrapper {
+  position: relative;
+  float: right;
+  cursor: pointer;
+}
+
+.avatar-badge-wrapper .msg-num {
+  position: absolute;
+  top: 9px;
+  right: -12px;
+  color: #fff;
+  background-color: #2db7f5;
+  border-radius: 50%;
+  padding: 2px 5px;
+  line-height: 1;
+}
+
+@keyframes ani-demo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>
