@@ -6,7 +6,7 @@
             <el-col :span="10">
               <div class="layout-logo">
                   <a @click="backHome()">
-                      <img src="../../images/logo.jpg" style="width: 50px;height: 50px;" align="absmiddle" />
+                      <img src="../../../images/logo.jpg" style="width: 50px;height: 50px;" align="absmiddle" />
                   </a>
               </div>
               <el-menu 
@@ -267,7 +267,7 @@ export default {
       if (code != null && code != "" && state != null && state != "") {
         const loading = this.$loading({
           lock: true,
-          text: 'Loading',
+          text: '正在登陆...',
           spinner: 'el-icon-loading',
           background: 'rgba(0, 0, 0, 0.7)'
         });
@@ -367,11 +367,6 @@ export default {
   }
 };
 </script>
-<style >
-.el-menu--popup {
-  min-width: 0;
-}
-</style>
 <style scoped>
 .index {
   min-width: 1000px;
@@ -404,14 +399,6 @@ export default {
   border-bottom: solid 1px #e6e6e6;
   padding-bottom: 2px;
   background: #fff;
-}
-.layout {
-  border: 1px solid #d7dde4;
-  background: #f5f7f9;
-  position: relative;
-  border-radius: 4px;
-  overflow: hidden;
-  min-width: 1000px;
 }
 
 .layout-logo {
@@ -446,75 +433,14 @@ export default {
 .sub-menu-item {
   width: 117px;
 }
-
-.layout-search {
-  height: 30px;
-  border-radius: 3px;
-  float: left;
-  position: relative;
-  left: 30px;
-}
-
-.layout-title {
-  margin-left: 30px;
-  height: inherit;
-  float: left;
-}
-
-.layout-title .home-text{
-  color: rebeccapurple;
-  font-weight: bold;
-}
-
-.layout-title .home-text:hover{
-  color: #2d8cf0;
-}
-
-.menu-layout {
-  height:65px;
-  width:100%;
-}
-.layout-nav {
-  height: inherit;
-  float: right;
-}
-
 .layout-footer-center {
   text-align: center;
   background: #fff;
   padding: 20px;
 }
-
-.demo-spin-icon-load {
-  animation: ani-demo-spin 1s linear infinite;
-}
-
-.avatar-badge-wrapper {
-  position: relative;
-  float: right;
-  cursor: pointer;
-}
-
-.avatar-badge-wrapper .msg-num {
-  position: absolute;
-  top: 9px;
-  right: -12px;
-  color: #fff;
-  background-color: #2db7f5;
-  border-radius: 50%;
-  padding: 2px 5px;
-  line-height: 1;
-}
-
-@keyframes ani-demo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+</style>
+<style >
+.el-menu--popup {
+  min-width: 0;
 }
 </style>

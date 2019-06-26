@@ -1,13 +1,13 @@
 <template>
-    <div class="home content-background">
+    <div class="content-background">
       <div>
-        <Carousel autoplay v-model="value2" loop>
-          <CarouselItem v-for="(item,index) in bannerList" :key="index">
-              <router-link :to="('/page/detail/'+item.id)">
+        <el-carousel trigger="click" height="550px">
+          <el-carousel-item v-for="(item,index) in bannerList" :key="index">
+            <router-link :to="('/page/detail/'+item.id)">
                 <img  class="banner-images" v-bind:src="(item.image)">
               </router-link>
-          </CarouselItem>
-        </Carousel>
+          </el-carousel-item>
+        </el-carousel>
       </div>
 
       <div v-if="flage" class="search-nothing">
@@ -77,7 +77,10 @@ export default {
         )
         .catch(
           function(error) {
-            this.$Message.error("无权限");
+            this.$message({
+              message: '无权限',
+              type: 'error'
+            });
           }.bind(this)
         );
     },
@@ -94,7 +97,10 @@ export default {
           )
           .catch(
             function(error) {
-              this.$Message.error("无权限");
+              this.$message({
+                message: '无权限',
+                type: 'error'
+              });
             }.bind(this)
           );
       } else {
@@ -117,7 +123,10 @@ export default {
           )
           .catch(
             function(error) {
-              this.$Message.error("无权限");
+              this.$message({
+                message: '无权限',
+                type: 'error'
+              });
             }.bind(this)
           );
       }
@@ -126,9 +135,6 @@ export default {
 };
 </script>
 <style scoped>
-.ivu-carousel {
-  height: 550px;
-}
 .banner-images {
   width: 100%;
   height: auto;
@@ -189,10 +195,10 @@ export default {
   border: 0;
 }
 .search-nothing {
-  background: #f5f7f9;
+  background: #fff;
   padding: 24px 50px;
   color: #495060;
-  font-size: 14px;
+  font-size: 16px;
   text-align: center;
 }
 .box-flex {

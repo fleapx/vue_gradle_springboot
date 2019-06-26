@@ -6,25 +6,21 @@ Vue.use(VueRouter);
 
 const routers = [
   {
-    path: "/test/index",
+    path: "/test",
     meta: {
       title: "smallsnail-wh"
     },
-    component: resolve => require(["./views/test.vue"], resolve),
+    component: resolve => require(["./views/page/pc/index.vue"], resolve),
     children: [
       {
-        path: "",
+        path: "detail/:id",
         name: "qq-home",
-        component: resolve => require(["./views/template/home.vue"], resolve),
+        component: resolve => require(["./views/test.vue"], resolve),
         meta: {
           title: "home"
         }
       }
     ]
-  },
-  {
-    path: "/image-capture",
-    component: resolve => require(["./views/template/image-capture.vue"], resolve)
   },
   {
     path: "*",
@@ -35,12 +31,12 @@ const routers = [
     meta: {
       title: "smallsnail-wh"
     },
-    component: resolve => require(["./views/template/index.vue"], resolve),
+    component: resolve => require(["./views/page/pc/index.vue"], resolve),
     children: [
       {
         path: "",
         name: "home",
-        component: resolve => require(["./views/template/home.vue"], resolve),
+        component: resolve => require(["./views/page/pc/bbs/home.vue"], resolve),
         meta: {
           title: "home"
         }
@@ -52,12 +48,12 @@ const routers = [
     meta: {
       title: "smallsnail-wh"
     },
-    component: resolve => require(["./views/template/index.vue"], resolve),
+    component: resolve => require(["./views/page/pc/index.vue"], resolve),
     children: [
       {
         path: "",
         name: "qq-home",
-        component: resolve => require(["./views/template/home.vue"], resolve),
+        component: resolve => require(["./views/page/pc/bbs/home.vue"], resolve),
         meta: {
           title: "home"
         }
@@ -76,12 +72,12 @@ const routers = [
     meta: {
       title: "smallsnail-wh"
     },
-    component: resolve => require(["./views/template/index.vue"], resolve),
+    component: resolve => require(["./views/page/pc/index.vue"], resolve),
     children: [
       {
         path: "home",
         name: "page-home",
-        component: resolve => require(["./views/template/home.vue"], resolve),
+        component: resolve => require(["./views/page/pc/bbs/home.vue"], resolve),
         meta: {
           title: "home"
         }
@@ -89,7 +85,7 @@ const routers = [
       {
         path: "home/:title",
         name: "page-home-title",
-        component: resolve => require(["./views/template/home.vue"], resolve),
+        component: resolve => require(["./views/page/pc/bbs/home.vue"], resolve),
         meta: {
           title: "home"
         }
@@ -97,7 +93,7 @@ const routers = [
       {
         path: "detail/:id",
         name: "page-detail-id",
-        component: resolve => require(["./views/template/detail.vue"], resolve),
+        component: resolve => require(["./views/page/pc/bbs/detail.vue"], resolve),
         meta: {
           title: "detail"
         }
@@ -105,7 +101,7 @@ const routers = [
       {
         path: "card/:id",
         name: "page-card-id",
-        component: resolve => require(["./views/template/card.vue"], resolve),
+        component: resolve => require(["./views/page/pc/bbs/card.vue"], resolve),
         meta: {
           title: "card"
         }
@@ -114,7 +110,7 @@ const routers = [
         path: "messages",
         name: "page-messages",
         component: resolve =>
-          require(["./views/template/messages.vue"], resolve),
+          require(["./views/page/pc/bbs/messages.vue"], resolve),
         meta: {
           title: "messages"
         }
@@ -123,7 +119,7 @@ const routers = [
         path: "user",
         name: "page-user",
         component: resolve =>
-          require(["./views/template/user-info.vue"], resolve),
+          require(["./views/page/pc/bbs/user-info.vue"], resolve),
         meta: {
           title: "user"
         }
@@ -132,7 +128,7 @@ const routers = [
         path: "user/:id",
         name: "page-user-id",
         component: resolve =>
-          require(["./views/template/user-page.vue"], resolve),
+          require(["./views/page/pc/bbs/user-page.vue"], resolve),
         meta: {
           title: "user"
         }
@@ -151,12 +147,12 @@ const routers = [
     meta: {
       title: "smallsnail-wh"
     },
-    component: resolve => require(["./views/mobile/index.vue"], resolve),
+    component: resolve => require(["./views/page/mobile/index.vue"], resolve),
     children: [
       {
         path: "",
         name: "mobile-home",
-        component: resolve => require(["./views/mobile/home.vue"], resolve),
+        component: resolve => require(["./views/page/mobile/home.vue"], resolve),
         meta: {
           title: "home"
         }
@@ -164,7 +160,7 @@ const routers = [
       {
         path: "home/:title",
         name: "mobile-home-title",
-        component: resolve => require(["./views/mobile/home.vue"], resolve),
+        component: resolve => require(["./views/page/mobile/home.vue"], resolve),
         meta: {
           title: "home"
         }
@@ -172,7 +168,7 @@ const routers = [
       {
         path: "detail/:id",
         name: "mobile-detail-id",
-        component: resolve => require(["./views/mobile/detail.vue"], resolve),
+        component: resolve => require(["./views/page/mobile/detail.vue"], resolve),
         meta: {
           title: "detail"
         }
@@ -180,7 +176,7 @@ const routers = [
       {
         path: "card/:id",
         name: "mobile-card-id",
-        component: resolve => require(["./views/mobile/card.vue"], resolve),
+        component: resolve => require(["./views/page/mobile/card.vue"], resolve),
         meta: {
           title: "card"
         }
@@ -189,7 +185,7 @@ const routers = [
       {
         path: "messages",
         name: "mobile-messages",
-        component: resolve => require(["./views/mobile/messages.vue"], resolve),
+        component: resolve => require(["./views/page/mobile/messages.vue"], resolve),
         meta: {
           title: "messages"
         }
@@ -202,12 +198,12 @@ const routers = [
       title: "base",
       requiresAuth: true
     },
-    component: resolve => require(["./views/sys/base.vue"], resolve),
+    component: resolve => require(["./views/console/base.vue"], resolve),
     children: [
       {
         path: "",
         name: "welcome",
-        component: resolve => require(["./views/sys/welcome.vue"], resolve),
+        component: resolve => require(["./views/console/welcome.vue"], resolve),
         meta: {
           title: "welcome"
         }
@@ -215,7 +211,7 @@ const routers = [
       {
         path: "menu",
         name: "menu",
-        component: resolve => require(["./views/sys/menu.vue"], resolve),
+        component: resolve => require(["./views/console/menu.vue"], resolve),
         meta: {
           title: "menu"
         }
@@ -223,7 +219,7 @@ const routers = [
       {
         path: "role",
         name: "role",
-        component: resolve => require(["./views/sys/role.vue"], resolve),
+        component: resolve => require(["./views/console/role.vue"], resolve),
         meta: {
           title: "role"
         }
@@ -231,7 +227,7 @@ const routers = [
       {
         path: "user",
         name: "user",
-        component: resolve => require(["./views/sys/user.vue"], resolve),
+        component: resolve => require(["./views/console/user.vue"], resolve),
         meta: {
           title: "user"
         }
@@ -239,7 +235,7 @@ const routers = [
       {
         path: "email",
         name: "email",
-        component: resolve => require(["./views/sys/email.vue"], resolve),
+        component: resolve => require(["./views/console/email.vue"], resolve),
         meta: {
           title: "email"
         }
@@ -247,7 +243,7 @@ const routers = [
       {
         path: "card",
         name: "cardmanage",
-        component: resolve => require(["./views/sys/card.vue"], resolve),
+        component: resolve => require(["./views/console/card.vue"], resolve),
         meta: {
           title: "card"
         }
@@ -256,7 +252,7 @@ const routers = [
         path: "i-edit",
         name: "interest-edit",
         component: resolve =>
-          require(["./views/sys/interest/interest-edit.vue"], resolve),
+          require(["./views/console/interest/interest-edit.vue"], resolve),
         meta: {
           title: "interest"
         }
@@ -265,7 +261,7 @@ const routers = [
         path: "i-create",
         name: "interest-create",
         component: resolve =>
-          require(["./views/sys/interest/interest-create.vue"], resolve),
+          require(["./views/console/interest/interest-create.vue"], resolve),
         meta: {
           title: "interest"
         }
@@ -274,7 +270,7 @@ const routers = [
         path: "i-delete",
         name: "interest-delete",
         component: resolve =>
-          require(["./views/sys/interest/interest-delete.vue"], resolve),
+          require(["./views/console/interest/interest-delete.vue"], resolve),
         meta: {
           title: "interest"
         }
@@ -282,7 +278,7 @@ const routers = [
       {
         path: "banner",
         name: "banner",
-        component: resolve => require(["./views/sys/banner.vue"], resolve),
+        component: resolve => require(["./views/console/banner.vue"], resolve),
         meta: {
           title: "banner"
         }
@@ -290,7 +286,7 @@ const routers = [
       {
         path: "article",
         name: "article",
-        component: resolve => require(["./views/sys/article.vue"], resolve),
+        component: resolve => require(["./views/console/article.vue"], resolve),
         meta: {
           title: "article"
         }
@@ -302,12 +298,12 @@ const routers = [
     meta: {
       title: "smallsnail-wh"
     },
-    component: resolve => require(["./views/template/index.vue"], resolve),
+    component: resolve => require(["./views/page/pc/index.vue"], resolve),
     children: [
       {
         path: "",
         name: "article-home",
-        component: resolve => require(["./views/article/pc/home.vue"], resolve),
+        component: resolve => require(["./views/page/pc/blog/home.vue"], resolve),
         meta: {
           title: "article"
         }
@@ -315,7 +311,7 @@ const routers = [
       {
         path: "create",
         name: "article-create",
-        component: resolve => require(["./views/article/pc/create-article.vue"], resolve),
+        component: resolve => require(["./views/page/pc/blog/create-article.vue"], resolve),
         meta: {
           title: "article"
         }
@@ -323,7 +319,7 @@ const routers = [
       {
         path: "create/success",
         name: "article-create",
-        component: resolve => require(["./views/article/pc/create-article-success.vue"], resolve),
+        component: resolve => require(["./views/page/pc/blog/create-article-success.vue"], resolve),
         meta: {
           title: "article"
         }
@@ -331,7 +327,7 @@ const routers = [
       {
         path: "detail/:id",
         name: "article-detail-id",
-        component: resolve => require(["./views/article/pc/article-detail.vue"], resolve),
+        component: resolve => require(["./views/page/pc/blog/article-detail.vue"], resolve),
         meta: {
           title: "article"
         }
@@ -339,7 +335,7 @@ const routers = [
       {
         path: "user",
         name: "article-user",
-        component: resolve => require(["./views/article/pc/user-article.vue"], resolve),
+        component: resolve => require(["./views/page/pc/blog/user-article.vue"], resolve),
         meta: {
           title: "article"
         }
@@ -347,7 +343,7 @@ const routers = [
       {
         path: "update/:id",
         name: "article-update-id",
-        component: resolve => require(["./views/article/pc/update-article.vue"], resolve),
+        component: resolve => require(["./views/page/pc/blog/update-article.vue"], resolve),
         meta: {
           title: "article"
         }

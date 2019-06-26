@@ -1,135 +1,61 @@
-<style scoped>
-.index {
-  align-items: center;
-  display: flex;
-  width: 100%;
-  min-width: 300px;
-  min-height: 300px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  text-align: center;
-  /*background: rebeccapurple;*/
-  background-image: url(../images/login.jpg);
-}
-.index .ivu-row-flex {
-  height: 100%;
-}
-#index_pc_bj {
-  width: 100%;
-  height: auto;
-  background-size: cover;
-  overflow: hidden;
-  background-position: center center; /*box-shadow: 0 0px 3px rgba(0,0,0,.5);*/
-  text-align: center;
-}
-/*具体内容*/
-.wrap_conter ul {
-  position: relative;
-  width: 300px;
-  border-radius: 5px;
-  background: #fff;
-  margin: 0 auto;
-}
-.wrap_conter li {
-  text-align: center;
-  color: #fff;
-  font-size: 12px;
-  line-height: 30px;
-  padding: 0 25px 0px 25px;
-  width: 100%;
-}
-.content {
-  color: #1c2438;
-  line-height: 40px;
-  display: block;
-  text-align: left;
-  padding: 5px 0 0 0;
-  margin: 0 80px 0 20px;
-}
-.pc-hign {
-  height: 75px;
-  display: inline-table;
-}
-.wrap_conter li dl {
-  width: 100%;
-  margin-top: 20px;
-}
-.name-password-error {
-  padding-bottom: 2px;
-  text-align: left;
-  line-height: 1;
-  color: #ed3f14;
-}
-.ivu-form-item-content .account-list {
-  width: auto;
-  padding-top: 10px;
-}
-.account-list li {
-  width: auto;
-  display: inline-block;
-}
-
-.account-list .icon {
-  width: 35px;
-  height: 40px;
-}
-</style>
 <template>
-    <div class="index">
-        <div id="index_pc_bj">
-            <Form ref="formLogin" :model="formLogin" :rules="ruleLogin">
-                <div class="wrap_conter">
-                    <ul style="list-style: none;box-shadow:10px 10px 20px rgba(0,0,0,.5);">
-                        <li style="border-bottom: 1px solid #e9eaec;">
-                            <div class="content">
-                                <img src="../images/logo.jpg" style="width: 40px;height: 40px;" align="absmiddle" />
-                                <span style="float:right;font-size: 15px"><Icon type="ios-log-in"></Icon>欢迎登录</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="name-password-error" v-if="this.$store.state.ifSign">用户名或密码错误</div>
-                            <dl>
-                                <FormItem prop="userName" >
-                                    <Input v-model="formLogin.userName" type="text" placeholder="登录名" >
-                                        <Icon type="ios-person-outline" slot="prepend" ></Icon>
-                                    </Input>
-                                </FormItem>
-                                <FormItem prop="password">
-                                    <Input v-model="formLogin.password" type="password" placeholder="密码" >
-                                    <Icon type="ios-lock-outline" slot="prepend"></Icon></Input>
-                                </FormItem>
-                                <FormItem>
-                                    <Button type="primary" @click="login('formLogin')" style="width: 250px">登录</Button>
-                                    <ul class="account-list">
-                                        <li>
-                                            <a href="https://github.com/login/oauth/authorize?client_id=bbb5cc2034eb62484c1c&state=github" style="{right: 26px;}">
-                                                <!-- <Icon  style="color: rebeccapurple;" size="40" type="social-github"></Icon> -->
-                                                <img class="icon" src="../images/GitHub.svg" />
-                                            </a>
-                                        </li>
-                                        
-                                        <li>
-                                            <a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101512648&redirect_uri=http://www.lovemtt.com/qq&state=qq" style="{right: 26px;}">
-                                                <img class="icon" src="../images/social-qq.svg" />  
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </FormItem>
-                            </dl>
-                        </li>
-                    </ul>
-                </div>
-            </Form>
-        </div>
+  <div class="login-container">
+    <div class="content-container">
+      <div class="login-form-wrapper">
+        <el-form
+          :model="formLogin"
+          :rules="ruleLogin"
+          ref="formLogin"
+          label-width="120px"
+          class="login-form">
+          <el-form-item label-width="0" class="login-header">
+            <img src="../images/logo.jpg" align="absmiddle" />
+            <h2 class="title">INTEREST</h2>
+          </el-form-item>
+          <el-divider></el-divider>
+          <div class="name-password-error" v-if="this.$store.state.ifSign">用户名或密码错误</div>
+          <el-form-item label-width="0" prop="userName">
+            <el-input
+              v-model="formLogin.userName"
+              @keyup.enter.native="login('formLogin')"
+              placeholder="登录名"
+              autofocus>
+                <i class="el-icon-user-solid" slot="prepend"></i>
+              </el-input>
+          </el-form-item>
+
+          <el-form-item label-width="0" prop="password">
+            <el-input
+              v-model="formLogin.password"
+              @keyup.enter.native="login('formLogin')"
+              type="password"
+              placeholder="密码">
+                <i class="el-icon-lock" slot="prepend"></i>
+              </el-input>
+          </el-form-item>
+
+          <el-form-item label-width="0">
+            <el-button class="width-100-percent" type="primary" @click="login('formLogin')">登陆</el-button>
+          </el-form-item>
+          <div class="other-login">
+            <a :href="githubLoginUrl">
+                <img src="../images/GitHub.svg" class="margin-right-20" />
+            </a>
+            <a :href="qqLoginUrl">
+                <img src="../images/social-qq.svg" />  
+            </a>
+          </div>
+        </el-form>
+      </div>
     </div>
+  </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      code: null,
+      githubLoginUrl: 'https://github.com/login/oauth/authorize?client_id=bbb5cc2034eb62484c1c&state=github',
+      qqLoginUrl: 'https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101512648&redirect_uri=http://www.lovemtt.com/qq&state=qq',
       formLogin: {
         userName: null,
         password: null
@@ -138,7 +64,9 @@ export default {
         userName: [
           { required: true, message: "请填写用户名", trigger: "blur" }
         ],
-        password: [{ required: true, message: "请填写密码", trigger: "blur" }]
+        password: [
+          { required: true, message: "请填写密码", trigger: "blur" }
+          ]
       }
     };
   },
@@ -156,12 +84,81 @@ export default {
             user_password: this.formLogin.password,
             router: this.$router
           });
+        }else {
+          return false;
         }
       });
     },
-    register() {
-      this.$router.push({ path: "/register" });
-    }
   }
 };
 </script>
+<style scoped lang="scss">
+.margin-right-20 {
+  margin-right: 50px;
+}
+.other-login {
+  text-align: center;
+
+  .el-form-item__content {
+    line-height: 0;
+  }
+
+  img {
+    width: 35px;
+    height: 40px;
+  }
+}
+.name-password-error {
+  padding-bottom: 4px;
+  text-align: left;
+  line-height: 1;
+  color: #ed3f14;
+}
+.login-header {
+  text-align: center;
+
+  img {
+    width: 40px;
+    height: 40px;
+    float: left;
+  }
+}
+.width-100-percent {
+  width: 100%;
+}
+.login-container {
+  width: 100%;
+  height: 100vh;
+}
+
+.content-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background-image: url(../images/login.jpg);
+  transition: all 0.3s ease-in-out;
+
+  .login-form-wrapper {
+    text-align: center;
+    padding: 10px;
+    flex: 1 1 auto;
+
+    .login-form {
+      padding: 20px 40px 20px;
+      display: inline-block;
+      border-radius: 10px;
+      width: 400px;
+      text-align: left;
+      background-color: #fff;
+      box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.07);
+
+      .title {
+        color: rgb(77, 77, 77);
+      }
+    }
+  }
+}
+</style>
