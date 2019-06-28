@@ -1,37 +1,41 @@
 <template>
-    <div class="home content-background">
-    	<div class="user-content">
-    		<div class="subhead">
-    			<h1 class="title-text">个人信息</h1>
-    		</div>
-    		<div class="headimg" @click="toggleShow()">
-    			<img :src="headImg">
-          <p class="head-btn">修改头像</p>
-    		</div>
-    		<div class="info">
-    			<Form :model="userInfo" label-position="top">
-			        <FormItem label="用户名">
-			            <Input v-model="userInfo.name"></Input>
-			        </FormItem>
-			        <FormItem label="用户主页">
-			            <Input v-model="userInfo.url"></Input>
-			        </FormItem>
-			        <FormItem label="邮箱地址">
-			            <Input v-model="userInfo.email"></Input>
-			        </FormItem>
-			        <FormItem label="个人简介">
-			            <Input v-model="userInfo.info" type="textarea" :rows="3"></Input>
-			        </FormItem>
-			        <FormItem label="所在位置">
-			            <Input v-model="userInfo.location"></Input>
-			        </FormItem>
-			        <FormItem label="擅长技能">
-			            <Input v-model="userInfo.skill"></Input>
-			        </FormItem>
-			        <Button type="primary" class="update-button" @click="updateInfo">更新</Button>
-			    </Form>
-    		</div>
-    	</div>
+    <div>
+      <div class="user-content">
+        <div class="subhead">
+          <h1 class="title-text">个人信息</h1>
+        </div>
+        <el-divider></el-divider>
+        <el-row :gutter="24">
+          <el-col :span="8" class="headimg">
+            <el-avatar shape="square" :size="100" :src="headImg" @click.native="toggleShow()"></el-avatar>
+            <el-button size="medium" type="primary" plain @click="toggleShow()">修改头像</el-button>
+          </el-col>
+          <el-col :span="16">
+            <el-form :model="userInfo" label-position="top" size="medium">
+              <el-form-item label="用户名">
+                  <el-input v-model="userInfo.name"></el-input>
+              </el-form-item>
+              <el-form-item label="用户主页">
+                  <el-input v-model="userInfo.url"></el-input>
+              </el-form-item>
+              <el-form-item label="邮箱地址">
+                  <el-input v-model="userInfo.email"></el-input>
+              </el-form-item>
+              <el-form-item label="个人简介">
+                  <el-input v-model="userInfo.info" type="textarea" :rows="3"></el-input>
+              </el-form-item>
+              <el-form-item label="所在位置">
+                  <el-input v-model="userInfo.location"></el-input>
+              </el-form-item>
+              <el-form-item label="擅长技能">
+                  <el-input v-model="userInfo.skill"></el-input>
+              </el-form-item>
+              <el-button size="small" type="primary" class="update-button" @click="updateInfo">更新</el-button>
+            </el-form>
+          </el-col>
+        </el-row>
+
+      </div>
       <my-upload 
         ref="upload"
         field="picture"
@@ -59,19 +63,19 @@ export default {
       headers: {
         Authorization:'bearer '+ localStorage.getItem("currentUser_token")
       },
-    	userInfo: {
-    		headimg:null,
-    		name:null,
-    		url:null,
-    		email:null,
-    		info:null,
-    		location:null,
-    		skill:null
-    	}
+      userInfo: {
+        headimg:null,
+        name:null,
+        url:null,
+        email:null,
+        info:null,
+        location:null,
+        skill:null
+      }
     };
   },
   mounted() {
-  	this.getUserInfo();
+    this.getUserInfo();
   },
   methods: {
     toggleShow() {
@@ -88,7 +92,10 @@ export default {
       .then(function(response) {
         this.headImg = jsonData.data;
         this.show = false;
-        this.$Notice.success({title: '头像修改成功'});
+        this.$notify({
+          title: '头像修改成功',
+          type: 'success'
+        });
         this.$refs.upload.off();
       }.bind(this))
       .catch(function(error) {
@@ -96,24 +103,27 @@ export default {
       }.bind(this));
     },
     cropUploadFail(status, field){
-      this.$Notice.error({title: '头像修改失败'});
+      this.$notify({
+        title: '头像修改失败',
+        type: 'error'
+      });
       this.$refs.upload.off();
     },
-  	userInfoSet(e){
-  		this.userInfo.headimg = e.headimg;
-  		this.userInfo.name = e.name;
-  		this.userInfo.url = e.url;
-  		this.userInfo.email = e.email;
-  		this.userInfo.info = e.info;
-  		this.userInfo.location = e.location;
-  		this.userInfo.skill = e.skill;
-  	},
-  	getUserInfo(){
-  		this.axios({
-	        method: "get",
-	        url: "/general/users/user/info"
-	    })
-	    .then(
+    userInfoSet(e){
+      this.userInfo.headimg = e.headimg;
+      this.userInfo.name = e.name;
+      this.userInfo.url = e.url;
+      this.userInfo.email = e.email;
+      this.userInfo.info = e.info;
+      this.userInfo.location = e.location;
+      this.userInfo.skill = e.skill;
+    },
+    getUserInfo(){
+      this.axios({
+          method: "get",
+          url: "/general/users/user/info"
+      })
+      .then(
           function(response) {
             this.userInfoSet(response.data.data);
             this.headImg = response.data.data.headimg;
@@ -124,16 +134,19 @@ export default {
             alter(error);
           }.bind(this)
         );
-  	},
-  	updateInfo(){
-  		this.axios({
-  			method: "put",
-  			url: "/general/users/user/info",
-  			data: this.userInfo
-  		})
-  		.then(
+    },
+    updateInfo(){
+      this.axios({
+        method: "put",
+        url: "/general/users/user/info",
+        data: this.userInfo
+      })
+      .then(
           function(response) {
-            this.$Notice.success({title: '修改成功'});
+            this.$notify({
+              title: '修改成功',
+              type: 'success'
+            });
           }.bind(this)
         )
         .catch(
@@ -141,63 +154,47 @@ export default {
             alter(error);
           }.bind(this)
         );
-  	}
+    }
   }
 };
 </script>
 <style>
-.ivu-form .ivu-form-item-label {
-	color: #24292e;
+.el-form--label-top .el-form-item__label {
+  padding: 0;
+  font-size: 12px;
 }
-.content-background {
-  background: #fff;
+.el-form-item {
+  margin-bottom: 0;
 }
 .user-content {
-	width: 550px;
-	margin:0 auto;
-	height: 625px;
+  width: 550px;
+  margin:0 auto;
+  background: #fff;
+  padding: 20px;
 }
 .user-content .subhead {
-    border-bottom: 1px solid #e1e4e8;
-    padding-bottom: 8px;
-    text-align: center;
+  text-align: center;
 }
 .user-content .title-text {
-	color: #24292e;
+  color: #24292e;
 }
 .user-content .info {
-	padding:16px 16px;
-	float: left;
-    width: 400px;
-    color: #24292e;
+  padding:16px 16px;
+  float: left;
+  width: 400px;
+  color: #24292e;
 }
 .user-content .info label {
-	color: #24292e;
+  color: #24292e;
 }
 .user-content .headimg {
-	float: left;
-	margin-top: 16px;
-  padding: 0 16px;
-  cursor: pointer;
+  text-align: center;
 }
 .user-content .headimg img {
-	width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin: 0 auto;
+  cursor: pointer;
 }
 .user-content .update-button {
-	width: 100%;
-}
-.head-btn {
-  padding: 5px 15px 6px;
-  font-size: 12px;
-  border-radius: 4px;
-  color: #47cb89;
-  text-align: center;
-  border: 1px solid #47cb89;
-}
-.head-btn:hover{
-  background: rgba(244,252,248,.5);
+  margin-top: 20px;
+  width: 100%;
 }
 </style>

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.MultipartConfigElement;
+import java.io.File;
 
 @Configuration
 public class OtherConfiguration {
@@ -19,6 +20,12 @@ public class OtherConfiguration {
      */
     @Bean
     public MultipartConfigElement multipartConfigElement() {
+        String path = otherProperties.getTemporaryPath();
+        File tmpFile = new File(path);
+        if (!tmpFile.exists()) {
+            tmpFile.mkdirs();
+        }
+
         MultipartConfigFactory factory = new MultipartConfigFactory();
         factory.setLocation(otherProperties.getTemporaryPath());
         return factory.createMultipartConfig();
