@@ -1,9 +1,4 @@
 var webpack = require('webpack');
-const path = require('path');
-
-function resolve(dir) {
-  return path.join(__dirname, dir);
-};
 
 module.exports = {
   // 基本路径
@@ -31,11 +26,7 @@ module.exports = {
       }),
     ]
   },
-  chainWebpack: config => {
-    config.resolve.alias
-      .set('@images', resolve('src/images'))
-      .set('@components', resolve('src/components'));
-  },
+  chainWebpack: () => {},
   // 生产环境是否生成 sourceMap 文件
   productionSourceMap: true,
   // css相关配置
@@ -59,11 +50,11 @@ module.exports = {
   devServer: {
     compress: true,
     host: "0.0.0.0",
-    port: 8071,
+    port: 8088,
     hotOnly: false,
     proxy: {
       "/interest": {
-        target: "http://localhost:8070",
+        target: "http://localhost:8080",
         secure: false
       }
     } // 设置代理
