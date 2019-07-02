@@ -13,8 +13,7 @@ const routers = [
     component: resolve => require(["./views/page/pc/index.vue"], resolve),
     children: [
       {
-        path: "detail/:id",
-        name: "qq-home",
+        path: "user/:id",
         component: resolve => require(["./views/test.vue"], resolve),
         meta: {
           title: "home"
@@ -128,7 +127,7 @@ const routers = [
         path: "user/:id",
         name: "page-user-id",
         component: resolve =>
-          require(["./views/page/pc/bbs/user-page.vue"], resolve),
+          require(["./views/page/pc/user-page.vue"], resolve),
         meta: {
           title: "user"
         }
