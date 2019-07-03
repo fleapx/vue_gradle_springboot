@@ -40,7 +40,7 @@
                 <el-menu-item index="login-out"><i class="el-icon-switch-button"></i>退出</el-menu-item>
                 <el-menu-item index="console" v-if="consoleFlag"><i class="el-icon-s-tools"></i>控制台</el-menu-item>
               </el-menu>
-              <el-badge :value="unreadMsgCount" class="user-head" type="primary" v-if="loginFlag">
+              <el-badge :value="unreadMsgCount" class="user-head" type="primary" v-if="loginFlag" max="99" :hidden="unreadMsgCount <= 0">
                 <img :src="user.headimg" @click="menuSelect('message')"/>
               </el-badge>
             </el-col>
