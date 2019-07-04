@@ -12,26 +12,10 @@
       :show-file-list="false"
       :before-upload="handleBeforeUpload"
       :on-success="handleSuccess"
-      
-      >
+      :on-error="handleError"
+      :on-progress="handleProgress">
       <el-button size="small" type="primary">上传图片</el-button>
     </el-upload>
-    <!-- <Upload 
-      v-show="false"
-            id="interest-editor"
-            ref="upload"
-            :headers="headers"
-            action="/interest/upload/picture"
-            name="picture"
-            :show-upload-list="false"
-            :before-upload="handleBeforeUpload"
-            :on-success="handleSuccess"
-            :on-format-error="handleFormatError"
-            :format="['jpg','jpeg','png']"
-            :max-size="1024"
-            :on-exceeded-size="handleMaxSize">
-            <Button icon="ios-cloud-upload-outline">上传图片</Button>
-        </Upload> -->
       <quill-editor
         :value="content" 
         ref="myQuillEditor" 
@@ -112,6 +96,7 @@
         },
         data () {
             return {
+                loading: null,
                 content:this.value,
                 headers:{
                     Authorization:'bearer '+ localStorage.getItem("currentUser_token")
@@ -149,6 +134,12 @@
         mounted(){
         },
         methods:{
+            handleError () {
+              this.loading.close();
+            },
+            handleProgress (event, file, fileList) {
+
+            },
             handleSuccess (res, file) {
                 // 获取富文本组件实例
                 let quill = this.$refs.myQuillEditor.quill;
@@ -158,6 +149,7 @@
                 quill.insertEmbed(length, 'image', res.data);
                 // 调整光标到最后
                 //quill.setSelection(length + 1)
+                this.loading.close();
             },
             handleBeforeUpload (file) {
               let formatVerify = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -175,10 +167,13 @@
                     message: '上传图片最大为1M,请优化后在上传。可使用https://zhitu.isux.us/网站优化'
                 });
               }
+              this.loading = this.$loading({
+                lock: true,
+                text: '上传中...',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+              });
               return formatVerify && sizeVerify;
-              
-              // this.$refs.upload.fileList.splice(0, this.$refs.upload.fileList.length);
-              // return true;
             },
             onEditorBlur(){//失去焦点事件
               this.$emit('editor-change',this.content);
