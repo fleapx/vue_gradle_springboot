@@ -17,11 +17,11 @@
       :visible="modal"
       width="360px">
       <p slot="title" class="dialog-title">
-          <Icon type="ios-information-circle"></Icon>
-          <span>温馨提示</span>
+        <i class="el-icon-info"></i>
+        <span>温馨提示</span>
       </p>
       <div class="dialog-body">
-          <p>为保证服务正常运行，每个用户每日只能发布一篇文章，是否确认发布？</p>
+        <p>为保证服务正常运行，每个用户每日只能发布一篇文章，是否确认发布？</p>
       </div>
       <div slot="footer">
           <el-button class="publish-button" type="warning" long :loading="modal_loading" @click="publish()">确认</el-button>
@@ -112,7 +112,7 @@ export default {
           }.bind(this)
         ).catch(
           function(error) {
-            this.$Message.error("新建失败");
+            this.$message.error("新建失败");
           }.bind(this)
         );
     },

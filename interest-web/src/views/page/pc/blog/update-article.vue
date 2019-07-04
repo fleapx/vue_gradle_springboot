@@ -1,56 +1,44 @@
-<style type="text/css">
-.content-background {
-  background: #fff;
-}
-.form {
-  padding: 20px;
-}
-.editor {
-  width: 100%;
-}
-.editor .ql-container {
-  height: 30rem;
-}
-</style>
 <template>
-	<div class="content-background">
-      <Form class="form" ref="entity" :model="entity" :rules="ruleNew" :label-width="80" >
-          <Form-item label="标题：" prop="title">
-              <Input v-model="entity.title" />
-          </Form-item>
-          <Form-item label="详情：" prop="content">
-              <interest-quill-editor class="editor" v-bind:interestContent="interestContent" @editor-change="e=>{contentGet(e)}"></interest-quill-editor>
-          </Form-item>
-          <FormItem>
-              <Button type="primary" @click="submit('entity')">发布</Button>
-          </FormItem>
-      </Form>
-      <Modal v-model="modal" width="360">
-        <p slot="header" style="color:#f60;text-align:center">
-            <Icon type="ios-information-circle"></Icon>
-            <span>温馨提示</span>
-        </p>
-        <div style="text-align:center">
-            <p>是否修改？</p>
-        </div>
-        <div slot="footer">
-            <Button type="error" size="large" long :loading="modal_loading" @click="updateArticle()">确认</Button>
-        </div>
-      </Modal>
+	<div class="update-article">
+    <el-form ref="entity" :model="entity" :rules="ruleNew" :label-width="80" label-position="top">
+      <el-form-item label="标题" prop="title">
+          <el-input v-model="entity.title"></el-input>
+      </el-form-item>
+      <el-form-item label="详情" prop="content">
+          <i-quill-editor class="editor" v-model="entity.content"></i-quill-editor>
+      </el-form-item>
+      <el-form-item>
+          <el-button type="primary" @click="submit('entity')">发布</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-dialog
+      :visible="modal"
+      width="360px">
+      <p slot="title" class="dialog-title">
+        <i class="el-icon-info"></i>
+        <span>温馨提示</span>
+      </p>
+      <div class="dialog-body">
+        <p>是否修改？</p>
+      </div>
+      <div slot="footer">
+          <el-button class="publish-button" type="warning" long :loading="modal_loading" @click="updateArticle()">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import InterestQuillEditor from "../../../console/interest/interest-quill-editor";
+import iQuillEditor from "@components/i-quill-editor.vue";
 export default {
   components: {
-    "interest-quill-editor": InterestQuillEditor
+    "i-quill-editor": iQuillEditor
   },
   data() {
     return {
       articleId:null,
       modal:false,
       modal_loading: false,
-      interestContent: "",
       /*entity实体*/
       entity: {
         title: null,
@@ -89,7 +77,6 @@ export default {
 	    }).then(
 	        function (response) {
 	            this.entitySet(response.data.data);
-	            this.interestContent = response.data.data.content;
 	        }.bind(this)
 	    ).catch(
 	        function (error) {
@@ -106,9 +93,6 @@ export default {
     entitySet(e) {
       this.entity.title = e.title;
       this.entity.content = e.content;
-    },
-    contentGet(e) {
-      this.entity.content = e;
     },
     submit(entity) {
       this.$refs[entity].validate(valid => {
@@ -130,7 +114,6 @@ export default {
       }).then(
           function(response) {
             if(response.data.status == "2000"){
-              this.interestContent = this.interestContent + ".";
               this.initEntity();
               setTimeout(() => {
                   this.modal_loading = false;
@@ -152,3 +135,29 @@ export default {
   }
 };
 </script>
+<style type="text/css" scoped>
+.update-article {
+  width: 80%;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 20px;
+}
+.editor {
+  width: 100%;
+}
+.reset-button {
+  margin-left: 10px;
+}
+.dialog-title {
+  color: #e6a23c;
+  text-align:center;
+  line-height: 24px;
+  font-size: 18px;
+}
+.dialog-body {
+  text-align:center;
+}
+.publish-button {
+  width: 100%;
+}
+</style>
