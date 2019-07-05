@@ -1,5 +1,5 @@
 <template>
-  <div id="userPage" class="user-page-container">
+  <div id="user_page" class="user-page-container">
     <el-row :gutter="24">
       <el-col :span="24">
         <i-user-info :user-info="userInfo" class="user-info"></i-user-info>
@@ -27,7 +27,8 @@
               </dd>
               <div class="interval"></div>
               <dd>{{dateGet(item.createTime)}}</dd>
-              <div class="right-info">
+              <div class="interval"></div>
+              <div class="read-comment-info">
                 <dd>
                   <router-link :to="('/article/detail/'+item.id)">
                     <span class="text">阅读数</span>
@@ -40,6 +41,19 @@
                     <span class="text">评论数</span>
                     <span class="num">{{item.commentCount}}</span>
                   </router-link>
+                </dd>
+              </div>
+              <div class="right-info">
+                <dd>
+                  <router-link :to="('/article/update/'+item.id)">
+                    <span class="text">修改</span>
+                  </router-link>
+                </dd>
+                <div class="interval"></div>
+                <dd>
+                  <a @click="delPre(item.id)">
+                    <span class="del-text">删除</span>
+                  </a>
                 </dd>
               </div>
             </dl>
@@ -62,15 +76,31 @@
         </div>
       </el-col>
     </el-row>
+
+    <el-dialog
+      :visible.sync="modal"
+      width="360px">
+        <div slot="title" class="dialog-title">
+          <i class="el-icon-warning"></i>
+          <span>温馨提示</span>
+        </div>
+        <div class="dialog-body">
+          <p>是否删除该篇文章？</p>
+        </div>
+        <div slot="footer">
+          <el-button class="del-button" type="warning" long :loading="modal_loading" @click="delArticle()">确认</el-button>
+        </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import iUserInfo from '@components/i-user-info.vue';
 export default {
-  name:'userPage',
   components: {iUserInfo},
   data() {
     return {
+      delArticleId:null,
+      modal:false,
       userId: null,
       userInfo: {
         headimg:null,
@@ -109,10 +139,7 @@ export default {
     getUserInfo(){
       this.axios({
           method: "get",
-          url: "/public/users/user/info",
-          params: {
-            userId: this.userId
-          }
+          url: "/general/users/user/info"
       })
       .then(
           function(response) {
@@ -125,26 +152,10 @@ export default {
           }.bind(this)
         );
     },
-    updateInfo(){
-      this.axios({
-        method: "put",
-        url: "/users/user/info",
-        data: this.userInfo
-      })
-      .then(
-          function(response) {
-          }.bind(this)
-        )
-        .catch(
-          function(error) {
-            alter(error);
-          }.bind(this)
-        );
-    },
     getArticle(e) {
       this.axios({
         method: "get",
-        url: "/public/users/user/"+this.userId+"/articles",
+        url: "/general/users/user/articles",
         params: {
           page: e.pageInfo.page,
           pageSize: e.pageInfo.pageSize
@@ -165,12 +176,45 @@ export default {
       this.getArticle({
         pageInfo: this.pageInfo,
       });
+    },
+    delPre(e){
+      this.delArticleId = e;
+      this.modal = true;
+    },
+    delArticle() {
+      this.axios({
+          method: "delete",
+          url: "/articles/article/"+this.delArticleId
+        })
+          .then(
+            function(response) {
+              this.$message.info("删除成功");
+              this.modal = false;
+              this.getArticle({
+            pageInfo: this.pageInfo
+          });
+            }.bind(this)
+          )
+          .catch(function(error) {
+            alert(error);
+          });
     }
   }
 };
 </script>
-<style  scoped></style>
 <style scoped>
+.dialog-body {
+  text-align:center;
+}
+.del-button {
+  width: 100%;
+}
+.dialog-title {
+  color: #e6a23c;
+  text-align:center;
+  line-height: 24px;
+  font-size: 18px;
+}
 .user-page-container {
   /*background: #fff;*/
   width: 90%;
@@ -287,43 +331,53 @@ export default {
     color: #8a8a8a;
     line-height: 24px;
   }
-  .list-user-other .right-info {
-    line-height: 24px;
-    float: right;
-  }
-  .list-user-other .right-info .text {
-    margin-right: 4px;
-    color: #8a8a8a;
-  }
-  .list-user-other .right-info .num {
-    color: #3399ea;
-  }
-  .interval {
-    float: left;
-    width: 1px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #e0e0e0;
-    margin-top: 6px;
-    margin-left: 8px;
-    margin-right: 8px;
-  }
-  .paging {
-    margin: 20px;
-  }
-  .default-article-content {
-    text-align: center;
-    height: 100px;
-  }
-  .default-article-content img{
-    width: 100px;
-    height: 100px;
-  }
-  .default-article-content span{
-    color: #24292e;
-    margin-left: 20px;
-    position: relative;
-    top: -45px;
-    font-size: 23px;
-  }
+.list-user-other .right-info {
+  line-height: 24px;
+  float: right;
+}
+.list-user-other .right-info .text {
+  color: #57a3f3;
+}
+.list-user-other .right-info .del-text {
+  color: red;
+}
+.list-user-other .read-comment-info {
+  line-height: 24px;
+  float: left;
+}
+.list-user-other .read-comment-info .text {
+  margin-right: 4px;
+  color: #8a8a8a;
+}
+.list-user-other .read-comment-info .num {
+  color: #3399ea;
+}
+.interval {
+  float: left;
+  width: 1px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  margin-top: 6px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.paging {
+  margin: 20px;
+}
+.default-article-content {
+  text-align: center;
+  height: 100px;
+}
+.default-article-content img{
+  width: 100px;
+  height: 100px;
+}
+.default-article-content span{
+  color: #24292e;
+  margin-left: 20px;
+  position: relative;
+  top: -45px;
+  font-size: 23px;
+}
 </style>
