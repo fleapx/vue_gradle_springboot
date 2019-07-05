@@ -13,7 +13,7 @@ const routers = [
     component: resolve => require(["./views/page/pc/index.vue"], resolve),
     children: [
       {
-        path: "user/:id",
+        path: "",
         component: resolve => require(["./views/test.vue"], resolve),
         meta: {
           title: "home"
@@ -359,16 +359,17 @@ const RouterConfig = {
 const router = new VueRouter(RouterConfig);
 
 router.beforeEach((to, from, next) => {
-  // let token = window.localStorage.getItem("currentUser_token");
-  // if (
-  //   to.matched.some(record => record.meta.requiresAuth) &&
-  //   (!token || token === null)
-  // ) {
-  //   next({
-  //     path: "/",
-  //     query: { redirect: to.fullPath }
-  //   });
-  // }
+  
+    let toMobile = to.fullPath.startsWith('/mobile');
+    let isMobile = navigator.userAgent.match(
+      /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+    );
+    if(!toMobile && isMobile){
+      next('/mobile');
+    }else if(toMobile && !isMobile){
+      next('/');
+    }
+    
   iView.LoadingBar.start();
   next();
 });

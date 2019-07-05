@@ -222,9 +222,6 @@ export default {
     };
   },
   mounted() {
-    if (!this.$store.getters._isMobile) {
-      this.$router.replace("/");
-    }
     var code = this.$route.query.code;
     var state = this.$route.query.state;
     this.login(code, state);

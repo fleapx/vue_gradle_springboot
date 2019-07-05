@@ -7,7 +7,7 @@
         <el-divider></el-divider>
         <el-row :gutter="24">
           <el-col :span="8" class="headimg">
-            <el-avatar shape="square" :size="100" :src="headImg" @click.native="toggleShow()"></el-avatar>
+            <el-avatar class="image" shape="square" :size="100" :src="headImg" @click.native="toggleShow()"></el-avatar>
             <el-button size="medium" type="primary" plain @click="toggleShow()">修改头像</el-button>
           </el-col>
           <el-col :span="16">
@@ -158,7 +158,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .el-form--label-top .el-form-item__label {
   padding: 0;
   font-size: 12px;
@@ -190,7 +190,7 @@ export default {
 .user-content .headimg {
   text-align: center;
 }
-.user-content .headimg img {
+.user-content .headimg .image {
   cursor: pointer;
 }
 .user-content .update-button {
