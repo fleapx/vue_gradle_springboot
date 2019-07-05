@@ -13,7 +13,7 @@
     </el-form>
 
     <el-dialog
-      :visible="modal"
+      :visible.sync="modal"
       width="360px">
       <p slot="title" class="dialog-title">
         <i class="el-icon-info"></i>

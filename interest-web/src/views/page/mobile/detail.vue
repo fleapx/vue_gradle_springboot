@@ -27,7 +27,7 @@
 }
 </style>
 <template>
-    <div id="mywork">
+    <div id="my_work">
 	    <div class="page-header-main">
 	      <div class="box-flex width-80 margin-auto margin-top-2 flex-direction-column flex-justify-center flex-items-center" >
 	        <div class="line-height-50 font-size-22">{{insterest.title}}</div>

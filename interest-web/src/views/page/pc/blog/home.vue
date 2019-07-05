@@ -1,5 +1,5 @@
 <template>
-    <div id="articleHome" class="article-home">
+    <div id="article_home" class="article-home">
       <div class="user-article">
         <el-card v-for="(item,index) in articleList" :key="index" class="card-body" shadow="hover">
           <div class="title">
@@ -56,7 +56,7 @@
 </template>
 <script>
 export default {
-  name: 'articleHome',
+  name: 'article_home',
   data() {
     return {
       searchContent:null,

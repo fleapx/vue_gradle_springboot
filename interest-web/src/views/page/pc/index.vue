@@ -68,7 +68,6 @@
       <el-dialog
         title="联系管理员"
         :visible.sync="emailModal"
-        :before-close="handleClose"
         width="600px"
         :close-on-click-modal="false">
         <span>

@@ -1,5 +1,5 @@
 <template>
-  <div id="userPage" class="user-page-container">
+  <div id="user_page" class="user-page-container">
     <el-row :gutter="24">
       <el-col :span="24">
         <i-user-info :user-info="userInfo" class="user-info"></i-user-info>
@@ -67,7 +67,7 @@
 <script>
 import iUserInfo from '@components/i-user-info.vue';
 export default {
-  name:'userPage',
+  name:'user_page',
   components: {iUserInfo},
   data() {
     return {
@@ -169,7 +169,6 @@ export default {
   }
 };
 </script>
-<style  scoped></style>
 <style scoped>
 .user-page-container {
   /*background: #fff;*/

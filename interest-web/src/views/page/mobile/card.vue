@@ -25,7 +25,7 @@
 }
 </style>
 <template>
-    <div id="mywork">
+    <div id="my_work">
 	    <div class="page-header-main">
 	      <div class="box-flex width-80 margin-auto margin-top-2 flex-direction-column flex-justify-center flex-items-center" >
             <div style="width: 100%;margin: 20px 0 20px 0">

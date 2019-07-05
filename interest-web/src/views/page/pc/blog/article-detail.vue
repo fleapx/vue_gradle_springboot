@@ -1,5 +1,5 @@
 <template>
-    <div id="articleDetail" class="article-detail">
+    <div id="article_detail" class="article-detail">
       <div class="">
           <div class="article">
               <div class="ql-container ql-snow">
@@ -106,7 +106,7 @@
 </template>
 <script>
 export default {
-  name: 'articleDetail',
+  name: 'article_detail',
   data() {
       return {
           articleId: null,

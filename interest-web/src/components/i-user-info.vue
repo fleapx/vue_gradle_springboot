@@ -1,5 +1,5 @@
 <template>
-  <div id="iUserInfo" class="i-user-info-container">
+  <div id="i_user_info" class="i-user-info-container">
     <el-card class="user-info-card" shadow="never">
       <div slot="header" class="user-head">
         <el-row :gutter="24">
@@ -44,7 +44,7 @@
 </template>
 <script>
 export default {
-  name: 'iUserInfo',
+  name: 'i_user_info',
   props: {
     userInfo: Object
   },
