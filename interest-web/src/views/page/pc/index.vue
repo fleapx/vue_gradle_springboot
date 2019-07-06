@@ -6,7 +6,7 @@
             <el-col :span="10">
               <div class="layout-logo">
                   <a @click="backHome()">
-                      <img src="../../../images/logo.jpg" style="width: 50px;height: 50px;" align="absmiddle" />
+                      <img src="@images/logo.jpg" width="50px" height="50px" align="absmiddle" />
                   </a>
               </div>
               <el-menu 

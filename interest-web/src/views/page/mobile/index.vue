@@ -1,151 +1,62 @@
-<style scoped>
-.mobild-layout {
-  border: 1px solid #d7dde4;
-  background: #f5f7f9;
-  position: relative;
-  border-radius: 4px;
-  overflow: hidden;
-}
-.mobild-layout .layout-logo {
-  /*width: 100px;*/
-  /*height: 30px;*/
-  /*background: #5b6270;*/
-  /*border-radius: 3px;*/
-  float: left;
-  /*position: relative;*/
-  /*top: 15px;
-        left: 20px;*/
-  margin-top: 7px;
-}
-.mobild-layout .layout-search {
-  height: 30px;
-  border-radius: 3px;
-  float: left;
-  position: relative;
-  left: 80px;
-}
-.mobild-layout .layout-nav {
-  /*width: 315px;
-        margin: 0 auto;
-        margin-right: 20px;*/
-  height: inherit;
-  float: right;
-  font-size: 15px;
-  margin-right: 5%;
-}
-.dropdown-menu {
-  text-align: center;
-}
-.mobild-layout .layout-nav span {
-  font-size: 15px;
-  color: #c92027;
-}
-.mobild-layout .layout-footer-center {
-  text-align: center;
-}
-.mobild-layout .demo-spin-icon-load {
-  animation: ani-demo-spin 1s linear infinite;
-}
-
-.avatar-badge-wrapper {
-  position: relative;
-  cursor: pointer;
-}
-
-.avatar-badge-wrapper .msg-num {
-  position: absolute;
-  top: 9px;
-  right: -12px;
-  color: #fff !important;
-  background-color: #2db7f5;
-  border-radius: 50%;
-  padding: 2px 5px;
-  line-height: 1;
-}
-
-@keyframes ani-demo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-.layout-title {
-  font-size: 20px;
-  font-weight: 400;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rebeccapurple;
-  left: 41%;
-}
-</style>
 <template>
     <div class="mobild-layout">
-    	<Layout>
-            <Header style="position: fixed;width: 100%;background:#fff;padding:0 0;z-index: 1000; line-height:0;">
-            	<div style="width: 95%;margin: 0 auto">
-                    <div class="layout-logo">
-                        <a @click="backHome()">
-                            <img src="../../../images/logo.jpg" style="width: 50px;height: 50px;" align="absmiddle" />
-                        </a>
-                    </div>
-                    <!-- <div style="height: 64px;float: left;">
-                        <span class="layout-title">interest</span>
-                    </div> -->
-                    <Dropdown v-if="loginFlag" trigger="click" class="layout-nav" @on-click="m=>{dropdownClick(m)}">
-                        <div  type="success" class="avatar-badge-wrapper">
+      <el-container>
+        <el-header>
+          <el-row :gutter="24">
+            <el-col :span="24">
+              <div class="layout-logo">
+                  <a @click="backHome()">
+                      <img src="@images/logo.jpg" width="50px" height="50px" align="absmiddle" />
+                  </a>
+              </div>
+              <el-dropdown
+                trigger="click"
+                class="dropdown"
+                @command="dropdownClick">
 
-                            <img style="width: 40px;height: 40px; margin-top: 12px;border-radius: 100%;" :src="user.headimg" />
+                <span>
+                  <el-badge 
+                    :value="unreadMsgCount" 
+                    class="user-head" 
+                    type="primary" 
+                    v-if="loginFlag" 
+                    max="99" 
+                    :hidden="unreadMsgCount <= 0">
+                    <img :src="user.headimg"/>
+                  </el-badge>
+                </span>
+                
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="name" icon="el-icon-user-solid">{{user.name}}</el-dropdown-item>
+                  <el-dropdown-item command="email" icon="el-icon-message">邮件</el-dropdown-item>
+                  <el-dropdown-item command="messages" icon="el-icon-chat-line-round">消息</el-dropdown-item>
+                  <el-dropdown-item command="loginOut" icon="el-icon-switch-button">退出</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
 
-                            <span v-if="unreadMsgCount > 0"  class="msg-num">{{unreadMsgCount}}</span>
+              <div v-if="!loginFlag" class="login-out">
+                  <el-button round @click="toLogin()">
+                    <span>登录</span>
+                  </el-button>
+              </div>
 
-                        </div>
+            </el-col>
+          </el-row>
+        </el-header>
 
-                        <DropdownMenu class="dropdown-menu" slot="list">
-                        	<DropdownItem name="name">
-                            	<Icon type="ios-person"></Icon>
-                               	{{user.name}}
-                            </DropdownItem>
-                            <DropdownItem name="email" divided>
-                            	<Icon type="ios-mail"></Icon>
-                                邮件
-                            </DropdownItem>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
 
-                            <DropdownItem name="messages" divided>
-                                <Icon type="md-chatboxes"></Icon>
-                                消息
-                            </DropdownItem>
-
-                            <DropdownItem name="loginOut" divided>
-                            	<Icon type="md-log-out"></Icon>
-                            	退出
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
-                    <div v-if="!loginFlag" class="layout-nav" style="margin-top: 14px;">
-                        <Button shape="circle" @click="toLogin()">
-                        	<span>登录</span>
-                        </Button>
-                    </div>
-                </div>
-            </Header>
-            <Content :style="{margin: '80px 0 0 0', background: '#fff'}">
-                <router-view></router-view>
-            </Content>
-            <Footer class="layout-footer-center">
-                <div>
-                    <a href="https://github.com/smallsnail-wh" target="_blank">
-                        <Icon  style="color: rebeccapurple;" size="40" type="logo-github"></Icon>
-                    </a>
-                </div>
-                <p>2018-2020 &copy; smallsail-wh</p>
-            </Footer>
-        </Layout>
+        <el-footer class="layout-footer-center" height="100">
+          <div>
+              <a href="https://github.com/smallsnail-wh" target="_blank">
+                  <Icon style="color: rebeccapurple;" size="40" type="logo-github"></Icon>
+              </a>
+          </div>
+          <p>Copyright &copy; 2019 smallsail-wh</p>
+        </el-footer>
+      </el-container>
 
         <Modal :mask-closable="false" :visible.sync="emailModal" :loading = "loading" v-model="emailModal" title="联系管理员" @on-ok="emailOk('email')" @on-cancel="cancel()">
              <Form ref="email" :rules="emailRule" :model="email"  :label-width="80" >
@@ -237,7 +148,7 @@ export default {
       }
     },
     toLogin() {
-      this.$router.push("/mlogin");
+      this.$router.push("/mobile/login");
     },
     userGet() {
       let _this = this;
@@ -445,3 +356,39 @@ export default {
   }
 };
 </script>
+<style scoped>
+.el-header {
+  padding: 0;
+}
+.mobile-layout {
+  background: #f5f7f9;
+}
+.layout-logo {
+  float: left;
+  padding: 5px;
+}
+.dropdown {
+  float: right;
+}
+.dropdown .user-head{
+  margin: 7px 30px;
+}
+.dropdown .user-head img {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+}
+.layout-footer-center {
+  text-align: center;
+  background: #fff;
+  padding: 20px;
+}
+.login-out {
+  float: right;
+  font-size: 15px;
+  padding: 10px;
+}
+.login-out span {
+color: #c92027;
+}
+</style>

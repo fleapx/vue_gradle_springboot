@@ -6,15 +6,15 @@ Vue.use(VueRouter);
 
 const routers = [
   {
-    path: "/test",
+    path: "/mobile/test",
     meta: {
       title: "smallsnail-wh"
     },
-    component: resolve => require(["./views/page/pc/index.vue"], resolve),
+    component: resolve => require(["./views/test.vue"], resolve),
     children: [
       {
         path: "",
-        component: resolve => require(["./views/test.vue"], resolve),
+        component: resolve => require(["./views/page/mobile/home.vue"], resolve),
         meta: {
           title: "home"
         }
@@ -135,7 +135,7 @@ const routers = [
     ]
   },
   {
-    path: "/mlogin",
+    path: "/mobile/login",
     meta: {
       title: "smallsnail-wh"
     },
