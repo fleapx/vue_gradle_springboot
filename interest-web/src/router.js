@@ -10,11 +10,11 @@ const routers = [
     meta: {
       title: "smallsnail-wh"
     },
-    component: resolve => require(["./views/test.vue"], resolve),
+    component: resolve => require(["./views/page/mobile/index.vue"], resolve),
     children: [
       {
-        path: "",
-        component: resolve => require(["./views/page/mobile/home.vue"], resolve),
+        path: ":id",
+        component: resolve => require(["./views/test.vue"], resolve),
         meta: {
           title: "home"
         }

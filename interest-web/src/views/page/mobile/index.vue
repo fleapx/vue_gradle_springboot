@@ -1,9 +1,9 @@
 <template>
-    <div class="mobild-layout">
+    <div class="mobile-layout">
       <el-container>
-        <el-header>
-          <el-row :gutter="24">
-            <el-col :span="24">
+        <el-header class="header">
+          <el-row :gutter="24" style="margin: 0">
+            <el-col :span="24" style="padding: 0">
               <div class="layout-logo">
                   <a @click="backHome()">
                       <img src="@images/logo.jpg" width="50px" height="50px" align="absmiddle" />
@@ -12,7 +12,8 @@
               <el-dropdown
                 trigger="click"
                 class="dropdown"
-                @command="dropdownClick">
+                @command="dropdownClick"
+                placement="top-start">
 
                 <span>
                   <el-badge 
@@ -44,7 +45,7 @@
           </el-row>
         </el-header>
 
-        <el-main>
+        <el-main class="main">
           <router-view></router-view>
         </el-main>
 
@@ -58,22 +59,33 @@
         </el-footer>
       </el-container>
 
-        <Modal :mask-closable="false" :visible.sync="emailModal" :loading = "loading" v-model="emailModal" title="联系管理员" @on-ok="emailOk('email')" @on-cancel="cancel()">
-             <Form ref="email" :rules="emailRule" :model="email"  :label-width="80" >
-                <FormItem label="标题" prop="title">
-                    <Input v-model="email.title" placeholder="请输入标题" />
-                </FormItem>
-                <FormItem label="email" prop="email">
-                    <Input v-model="email.email" placeholder="请输入email" />
-                </FormItem>
-                <FormItem label="姓名" prop="name">
-                    <Input v-model="email.name" placeholder="请输入姓名" />
-                </FormItem>
-                <FormItem label="内容" prop="content">
-                    <Input v-model="email.content" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." />
-                </FormItem>
-            </Form>
-        </Modal>
+      <el-dialog
+        title="联系管理员"
+        :visible.sync="emailModal"
+        :close-on-click-modal="false"
+        label-position="top"
+        width="90%">
+        <span>
+          <el-form :model="email" :rules="emailRule" ref="email">
+            <el-form-item label="标题" prop="title">
+              <el-input v-model="email.title"></el-input>
+            </el-form-item>
+            <el-form-item label="email" prop="email">
+              <el-input v-model="email.email"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="email.name"></el-input>
+            </el-form-item>
+            <el-form-item label="内容" prop="content">
+              <el-input v-model="email.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
+            </el-form-item>
+          </el-form>
+        </span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="emailModal = false">取 消</el-button>
+          <el-button type="primary" @click="emailOk('email')">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
 </template>
 <script>
@@ -183,7 +195,7 @@ export default {
         })
         .catch(
           function(error) {
-            this.$Message.error("无权限");
+            this.$message.error("无权限");
           }.bind(this)
         );
     },
@@ -211,10 +223,10 @@ export default {
       }
     },
     backHome() {
-      this.$router.push("/page/home");
+      this.$router.push("/mobile");
     },
     cancel() {
-      this.$Message.info("点击了取消");
+      this.$message.info("点击了取消");
     },
     emailOk(email) {
       this.$refs[email].validate(valid => {
@@ -226,7 +238,7 @@ export default {
           })
             .then(
               function(response) {
-                this.$Message.info("发送成功");
+                this.$message.info("发送成功");
               }.bind(this)
             )
             .catch(function(error) {
@@ -234,7 +246,7 @@ export default {
             });
           this.emailModal = false;
         } else {
-          this.$Message.error("表单验证失败!");
+          this.$message.error("表单验证失败!");
           setTimeout(() => {
             this.loading = false;
             this.$nextTick(() => {
@@ -309,7 +321,7 @@ export default {
         )
         .catch(
           function(error) {
-            this.$Message.error("登陆失败");
+            this.$message.error("登陆失败");
           }.bind(this)
         );
     },
@@ -338,13 +350,14 @@ export default {
             );
             this.axios.defaults.headers.common["Authorization"] =
               "bearer " + localStorage.getItem("currentUser_token");
+            this.$router.push({ path: "/qq" });
             this.$router.push({ path: "/" });
             location.reload();
           }.bind(this)
         )
         .catch(
           function(error) {
-            this.$Message.error("登陆失败");
+            this.$message.error("登陆失败");
           }.bind(this)
         );
     },
@@ -362,6 +375,13 @@ export default {
 }
 .mobile-layout {
   background: #f5f7f9;
+}
+.header {
+  background: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.05);
+}
+.main {
+  padding: 0;
 }
 .layout-logo {
   float: left;
@@ -389,6 +409,6 @@ export default {
   padding: 10px;
 }
 .login-out span {
-color: #c92027;
+  color: #c92027;
 }
 </style>

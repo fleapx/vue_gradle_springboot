@@ -1,4 +1,4 @@
-<style type="text/css">
+<style type="text/css" scoped>
 .content {
   margin-top: 10px;
 }

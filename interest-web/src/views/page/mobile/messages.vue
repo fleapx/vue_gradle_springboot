@@ -84,20 +84,6 @@ export default {
         .catch(function(error) {
           _this.$Message.error("已读失败，请稍后重试");
         });
-      // this.axios.put('/msgrecords/read/',{
-      //     msgRecordId: id
-      // }).then(function() {
-      //     let index = _this.messages.findIndex(function(item) {
-      //         return item.id == id;
-      //     });
-
-      //     let item = _this.messages[index];
-      //     item.isread = 1;
-
-      //     _this.messages.splice(index, 1, item);
-      // }).catch(function (error) {
-      //     _this.$Message.error('已读失败，请稍后重试');
-      // });
     }
   }
 };

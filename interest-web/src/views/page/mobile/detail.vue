@@ -1,99 +1,68 @@
-<style type="text/css">
-.clearfix:after {
-  visibility: hidden;
-  display: block;
-  font-size: 0;
-  content: ".";
-  clear: both;
-  height: 0;
-}
-.clearfix {
-  zoom: 1;
-}
-.head {
-  border-bottom: 1px solid #e8eaec;
-}
-.layout-left {
-  float: left;
-}
-.content p{
-  word-wrap: break-word;
-  word-break: break-all;
-  overflow: hidden;
-}
-.chat {
-  color:#f90;
-  float: right;
-}
-</style>
 <template>
-    <div id="my_work">
-	    <div class="page-header-main">
-	      <div class="box-flex width-80 margin-auto margin-top-2 flex-direction-column flex-justify-center flex-items-center" >
-	        <div class="line-height-50 font-size-22">{{insterest.title}}</div>
-	        <div class="text-align-center margin-top-2">
-	        </div>
-            <div class="detailContent ql-editor" v-html="insterest.content" style="width: 100%;margin-top: 20px"></div>
+  <div class="detail-layout">
+    <div class="interest-title">
+    {{insterest.title}}
+    </div>
 
-            <div style="width: 100%;margin: 10% 0 20px 0">
-                <div class="ivu-card-head" style="background: #eceef2">
-                    <p>看帖</p>
-                </div>
-                <Card v-for="(item,index) in postcardList" :key="index">
-                    <div class="clearfix head">
-                    	<div class="layout-left" style="margin-top: 2px;">
-                    		<a :href="item.githuburl" target="_blank">
-	                            <img :src="item.headimg" style="width: 30px;height: 30px;border-radius: 100%;margin-top: 6px;">
-	                        </a>
-                    	</div>
-                      <div class="layout-left" style="margin-left: 7px">
-                    		<p style="font-size: 17px;">
-                    			<a :href="item.githuburl" target="_blank">
-                    				{{item.username}}
-                    			</a>
-                    		</p>
-                    		<p style="font-size: 1px;">
-                    			{{item.replytime}}
-                    		</p>
-                    	</div>
-                      <div class="chat">
-                        <Icon type="md-chatboxes" size="25" />
-                        <span>{{item.replyCount}}</span>
-                      </div>
-                    </div>
-                    <div class="content">
-                        <p>
-	                        <router-link :to="('/mobile/card/'+item.id)">
-	                            <span class="tirtleFont lineThrou">{{item.title}}</span>
-	                        </router-link>
-	                    </p>
-                    </div>
-                </Card>
-                <div style="margin-top: 20px">
-                    <Page :total="total" :page-size="pageInfo.pageSize" show-total @on-change="e=>{pageSearch(e)}"></Page>
-                </div>
-            </div>
+    <div class="ql-container ql-snow interest-content">
+      <div class="ql-editor">
+        <div v-html="insterest.content"></div>
+      </div>
+    </div>
 
-            <div class="box-flex width-100 margin-auto margin-top-2 border-top border-color-bfbfbf"></div>
-
-            <div class="box-flex margin-auto margin-top-2 flex-direction-column flex-justify-center flex-items-center" style="width: 100%;margin-bottom: 30px;">
-                <div class=" width-100 flex-direction-row">
-                  <div class="box-flex flex-1 padding-all-5x">
-                    <span><Icon type="edit"></Icon>发帖</span>
-                  </div>
-                  <div class="box-flex flex-6 width-100 padding-all-5x">
-                    <Input v-model="title" placeholder="标题" />
-                  </div>
-                  <div class="box-flex flex-6 width-100 padding-all-5x">
-                    <Input v-model="textarea" type="textarea" :rows="6" placeholder="内容" />
-                  </div>
-                </div>
-                <div class="box-flex width-100 margin-top-2 flex-items-flex-end flex-justify-flex-end margin-bottom-3">
-                  <Button type="primary" @click="sendCard()">发表</Button>
-                </div>
-              </div>
-	      </div>
-	    </div>
+    <div class="post-card">
+      <div class="post-card-head">
+          <p>看帖</p>
+      </div>
+      <el-card v-for="(item,index) in postcardList" :key="index" shadow="hover">
+        <div slot="header" class="clearfix">
+          <a :href="$store.state.userUrlPre+item.userid" target="_blank" class="user-info">
+            <img :src="item.headimg">
+          </a>
+          <div class="user-info">
+            <a class="user-name" :href="$store.state.userUrlPre+item.userid" target="_blank">
+              {{item.username}}
+            </a>
+            <p class="post-time">
+              {{item.replytime}}
+            </p>
+          </div>
+          <div class="chat">
+            <i class="el-icon-chat-line-round"></i>
+            <span>{{item.replyCount}}</span>
+          </div>
+        </div>
+        <div>
+          <router-link :to="('/mobile/card/'+item.id)">
+              <span class="title-text">{{item.title}}</span>
+          </router-link>
+        </div>
+      </el-card>
+      <el-pagination
+        hide-on-single-page
+        class="pagination"
+        background
+        layout="total, prev, pager, next"
+        :total="total"
+        :page-size="pageInfo.pageSize"
+        @current-change="e=>{pageSearch(e)}">
+      </el-pagination>
+    </div>
+    <el-divider></el-divider>
+    <div class="send-card">
+      <div class="send-card-sub">
+        <span><i class="el-icon-edit-outline"></i>发帖</span>
+      </div>
+      <div class="send-card-sub">
+        <el-input v-model="title" placeholder="标题"></el-input>
+      </div>
+      <div class="send-card-sub">
+        <el-input v-model="textarea" type="textarea" rows="6" placeholder="内容"></el-input>
+      </div>
+    </div>
+    <div class="send-button">
+      <el-button type="primary" @click="sendCard()">发表</el-button>
+    </div>
   </div>
 </template>
 <script>
@@ -222,7 +191,7 @@ export default {
           })
             .then(
               function(response) {
-                this.$Message.info("发帖成功");
+                this.$message.info("发帖成功");
                 this.title = "";
                 this.textarea = "";
                 this.pageInfo.page = 0;
@@ -238,12 +207,121 @@ export default {
               }.bind(this)
             );
         } else {
-          this.$Message.error("登录后，才能发帖！");
+          this.$message.error("登录后，才能发帖！");
         }
       } else {
-        this.$Message.error("请填写标题和内容");
+        this.$message.error("请填写标题和内容");
       }
     }
   }
 };
 </script>
+<style type="text/css" scoped>
+.detail-layout {
+  background: #fff;
+  margin: 10px 0;
+}
+.detail-layout .interest-title {
+    font-size: 220%;
+    line-height: 50px;
+    text-align: center;
+    padding: 10px 0;
+}
+.detail-layout .interest-content {
+  border: 0;
+  border-top: 1px solid #ccc;
+}
+.post-card {
+  padding: 0 15px;
+  margin: 50px 0;
+}
+.post-card .post-card-head {
+  background: #eceef2;
+  border-bottom: 1px solid #e8eaec;
+  padding: 14px 16px;
+  line-height: 1;
+}
+.post-card .post-card-head p {
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+  line-height: 20px;
+  font-size: 14px;
+  color: #17233d;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.post-card .chat{
+float: right;
+display: inline;
+color:#f90;
+}
+.post-card .chat i {
+  font-size: 25px;
+}
+
+.post-card .chat span{
+  margin-left: 2px;
+  font-size: 14px;
+}
+.post-card .user-info {
+  float: left;
+  font-size: 14px;
+  color: #333;
+  margin-right: 5px;
+}
+.post-card .user-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+}
+.post-card .user-info .user-name {
+  font-size: 17px;
+}
+.post-card .user-info .post-time {
+  font-size: 12px;
+}
+.pagination {
+  margin-top: 10px;
+}
+.send-card {
+  padding: 0 15px;
+}
+.send-card .send-card-sub {
+  padding: 5px 0;
+}
+.send-button {
+  margin-top: 10px;
+  margin-left: 15px;
+  padding-bottom: 10px;
+}
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: ".";
+  clear: both;
+  height: 0;
+}
+.clearfix {
+  zoom: 1;
+}
+.head {
+  border-bottom: 1px solid #e8eaec;
+}
+.layout-left {
+  float: left;
+}
+.content p{
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow: hidden;
+}
+.chat {
+  color:#f90;
+  float: right;
+}
+</style>
