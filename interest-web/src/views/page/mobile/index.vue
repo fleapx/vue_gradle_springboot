@@ -137,6 +137,7 @@ export default {
         content: ""
       },
       user: {
+        id: null,
         loginName: "",
         email: "",
         headimg: "",
@@ -215,6 +216,8 @@ export default {
         this.$store.dispatch("users/loginOUt", { router: this.$router });
       } else if (m == "messages") {
         this.$router.push({ path: "/mobile/messages" });
+      } else if(m == "name"){
+        this.$router.push(this.$store.state.userMobileUrlPre + this.user.id);
       }
     },
     toLogin() {
@@ -258,6 +261,7 @@ export default {
         );
     },
     userSet(e) {
+      this.user.id = e.id;
       this.user.loginName = e.loginName;
       this.user.email = e.email;
       this.user.headimg = e.headimg;
