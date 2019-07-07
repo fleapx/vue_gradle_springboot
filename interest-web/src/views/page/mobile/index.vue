@@ -60,7 +60,9 @@
                 {{item.name}}
               </li>
             </ul>
+            
           </transition>
+          
         </el-header>
 
         <el-main class="main">
@@ -478,13 +480,12 @@ export default {
 }
 .dropdown-list {
   width: 100%;
-  /*height: 100%;*/
-  height: auto;
+  height: 100%;
   z-index: 2003;
   position: absolute;
   top: 60px;
-  background-color: rgba(0, 0, 0, 0.7);
   color: rgba(102, 51, 153, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
 }
 .li-acitve {
   color: rgb(102, 51, 153);
@@ -497,6 +498,13 @@ export default {
   text-align: center;
   padding: 15px;
   border-top: 1px solid #ebedf0;
+}
+.overlay {
+  z-index: 2002;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 .fade-enter-active, .fade-leave-active{
   transition: height .3s ease;

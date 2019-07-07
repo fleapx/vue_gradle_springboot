@@ -12,6 +12,14 @@ export default {
       }
       return time.getFullYear() + "-" + mounth + "-" + time.getDate() + " " + time.getHours() + ":" + minute;
     };
+    Vue.prototype.dateGetWithoutTime = function(e) {
+      var time = new Date(Number(e));
+      var mounth = time.getMonth() + 1;
+      if (mounth < 10) {
+        mounth = "0" + mounth;
+      }
+      return time.getFullYear() + "-" + mounth + "-" + time.getDate();
+    };
 
     Vue.prototype.latestTimeFormat = function(time) {
           if (!time) {

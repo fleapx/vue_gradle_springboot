@@ -16,11 +16,11 @@
       </div>
       <el-card v-for="(item,index) in postcardList" :key="index" shadow="hover">
         <div slot="header" class="clearfix">
-          <a :href="$store.state.userUrlPre+item.userid" target="_blank" class="user-info">
+          <a :href="$store.state.userMobileUrlPre+item.userid" target="_blank" class="user-info">
             <img :src="item.headimg">
           </a>
           <div class="user-info">
-            <a class="user-name" :href="$store.state.userUrlPre+item.userid" target="_blank">
+            <a class="user-name" :href="$store.state.userMobileUrlPre+item.userid" target="_blank">
               {{item.username}}
             </a>
             <p class="post-time">

@@ -180,13 +180,34 @@ const routers = [
           title: "card"
         }
       },
-
       {
         path: "messages",
         name: "mobile-messages",
         component: resolve => require(["./views/page/mobile/messages.vue"], resolve),
         meta: {
           title: "messages"
+        }
+      },
+      {
+        path: "article",
+        name: "mobile-article",
+        component: resolve => require(["./views/page/mobile/article.vue"], resolve),
+        meta: {
+          title: "article"
+        }
+      },{
+        path: "article/detail/:id",
+        name: "mobile-article-detail",
+        component: resolve => require(["./views/page/mobile/article-detail.vue"], resolve),
+        meta: {
+          title: "detail"
+        }
+      },{
+        path: "user/:id",
+        name: "mobile-user-page",
+        component: resolve => require(["./views/page/mobile/user-page.vue"], resolve),
+        meta: {
+          title: "user"
         }
       }
     ]

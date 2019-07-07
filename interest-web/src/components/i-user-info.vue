@@ -1,5 +1,5 @@
 <template>
-  <div id="i_user_info" class="i-user-info-container">
+  <div id="i_user_info" class="i-user-info-container" :style="'width: ' + width">
     <el-card class="user-info-card" shadow="never">
       <div slot="header" class="user-head">
         <el-row :gutter="24">
@@ -46,7 +46,11 @@
 export default {
   name: 'i_user_info',
   props: {
-    userInfo: Object
+    userInfo: Object,
+    width: {
+      type: String,
+      default: '280px'
+    }
   },
   data() {
     return {
@@ -58,7 +62,6 @@ export default {
   }
 };
 </script>
-<style  scoped></style>
 <style scoped>
 .el-card {
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05);
