@@ -3,12 +3,19 @@
       <el-container>
         <el-header class="header">
           <el-row :gutter="24" style="margin: 0">
-            <el-col :span="24" style="padding: 0">
-              <div class="layout-logo">
-                  <a @click="backHome()">
-                      <img src="@images/logo.jpg" width="50px" height="50px" align="absmiddle" />
-                  </a>
+            <el-col :span="8" style="padding: 0">
+              <div class="menu" v-clickoutside="outsideClose">
+                <el-button icon="el-icon-menu" circle @click="dropdownListShow = !dropdownListShow"></el-button>
               </div>
+            </el-col>
+            <el-col :span="8" style="padding: 0">
+              <div class="layout-logo">
+                <a @click="backHome()">
+                  INTEREST
+                </a>
+            </div>
+            </el-col>
+            <el-col :span="8" style="padding: 0">
               <el-dropdown
                 trigger="click"
                 class="dropdown"
@@ -43,6 +50,17 @@
 
             </el-col>
           </el-row>
+          <transition name="fade">
+            <ul v-if="dropdownListShow" class="dropdown-list">
+              <li 
+                v-for="item in dropdownListData" 
+                :key="item.id"
+                :class="{'li-acitve' : acitve == item.id}"
+                @click="dropdownListClick(item)">
+                {{item.name}}
+              </li>
+            </ul>
+          </transition>
         </el-header>
 
         <el-main class="main">
@@ -92,6 +110,17 @@
 export default {
   data() {
     return {
+      acitve: null,
+      dropdownListData: [{
+        id: 'home',
+        path: '/mobile',
+        name: '首页'
+      },{
+        id: 'article',
+        path: '/mobile/article',
+        name: '文章'
+      }],
+      dropdownListShow: false,
       loginFlag: false,
       consoleFlag: false,
       loading: true,
@@ -149,7 +178,34 @@ export default {
     var state = this.$route.query.state;
     this.login(code, state);
   },
+  directives:{
+    clickoutside:{
+        bind:function(el,binding,vnode){
+            function documentHandler(e){
+                if(el.contains(e.target)){
+                    return false;
+                }
+                if(binding.expression){
+                    binding.value(e)
+                }
+            }
+            el._vueClickOutside_ = documentHandler;
+            document.addEventListener('click',documentHandler);
+        },
+        unbind:function(el,binding){
+            document.removeEventListener('click',el._vueClickOutside_);
+            delete el._vueClickOutside_;
+        }
+    },
+  },
   methods: {
+    dropdownListClick(val){
+      this.acitve = val.id;
+      this.$router.push(val.path);
+    },
+    outsideClose(){
+      this.dropdownListShow = false;
+    },
     dropdownClick(m) {
       if (m == "email") {
         this.emailModal = true;
@@ -370,6 +426,10 @@ export default {
 };
 </script>
 <style scoped>
+.menu {
+ font-size: 30px;
+ padding-left: 15px;
+}
 .el-header {
   padding: 0;
 }
@@ -384,18 +444,23 @@ export default {
   padding: 0;
 }
 .layout-logo {
-  float: left;
-  padding: 5px;
+  text-align: center;
+}
+.layout-logo a {
+  color: #663399;
+  font-size: 20px;
+  line-height: 60px;
+  font-weight: bold;
 }
 .dropdown {
   float: right;
 }
 .dropdown .user-head{
-  margin: 7px 30px;
+  margin: 12px 30px;
 }
 .dropdown .user-head img {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   border-radius: 100%;
 }
 .layout-footer-center {
@@ -411,4 +476,35 @@ export default {
 .login-out span {
   color: #c92027;
 }
+.dropdown-list {
+  width: 100%;
+  /*height: 100%;*/
+  height: auto;
+  z-index: 2003;
+  position: absolute;
+  top: 60px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: rgba(102, 51, 153, 0.5);
+}
+.li-acitve {
+  color: rgb(102, 51, 153);
+  border-left: 4px solid rgb(102, 51, 153);
+}
+.dropdown-list li {
+  background-color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  padding: 15px;
+  border-top: 1px solid #ebedf0;
+}
+.fade-enter-active, .fade-leave-active{
+  transition: height .3s ease;
+}
+.fade-enter, .fade-leave-to {
+  height: 0;
+}
+.fade-enter-to, .fade-leave {
+  height: auto;
+} 
 </style>
