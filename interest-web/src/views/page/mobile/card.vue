@@ -1,104 +1,66 @@
-<style type="text/css" scoped>
-.content {
-  margin-top: 10px;
-}
-.content p{
-  word-wrap: break-word;
-  word-break: break-all;
-  overflow: hidden;
-}
-.title {
-  background: #eceef2;
-  padding: 14px 16px;
-}
-.title p{
-  word-wrap: break-word;
-  word-break: break-all;
-  overflow: hidden;
-  line-height: 20px;
-  font-size: 14px;
-  color: #17233d;
-  font-weight: 700;
-}
-.head {
-  border-bottom: 1px solid #e8eaec;
-}
-</style>
 <template>
-    <div id="my_work">
-	    <div class="page-header-main">
-	      <div class="box-flex width-80 margin-auto margin-top-2 flex-direction-column flex-justify-center flex-items-center" >
-            <div style="width: 100%;margin: 20px 0 20px 0">
-                <div class="title">
-                    <p>{{postcard.title}}</p>
-                </div>
-                <Card>
-                    <div class="clearfix head">
-                        <div class="layout-left" style="margin-top: 2px;">
-                            <a :href="postcard.githuburl" target="_blank">
-                                <img :src="postcard.headimg" style="width: 30px;height: 30px;border-radius: 100%;margin-top: 6px;">
-                            </a>
-                        </div>
-                        <div class="layout-left" style="margin-left: 7px">
-                            <p style="font-size: 17px;">
-                                <a :href="postcard.githuburl" target="_blank">
-                                    {{postcard.username}}
-                                </a>
-                            </p>
-                            <p style="font-size: 1px;">
-                                {{postcard.createtime}}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="content">
-                        <p>{{postcard.content}}</p>
-                    </div>
-                </Card>
+    <div class="card-layout">
+      <div class="card-title">
+          <p>{{postcard.title}}</p>
+      </div>
+      <el-card shadow="hover">
+        <div slot="header" class="clearfix">
+          <a :href="$store.state.userUrlPre+postcard.userid" target="_blank" class="user-info">
+            <img :src="postcard.headimg">
+          </a>
+          <div class="user-info">
+            <a class="user-name" :href="$store.state.userUrlPre+postcard.userid" target="_blank">
+              {{postcard.username}}
+            </a>
+            <p class="post-time">
+              {{postcard.createtime}}
+            </p>
+          </div>
+        </div>
+        <div>
+          <span class="post-content">{{postcard.content}}</span>
+        </div>
+      </el-card>
 
-                <Card v-for="(item,index) in replyCardList" :key="index">
-                    <div class="clearfix head">
-                        <div class="layout-left" style="margin-top: 2px;">
-                            <a :href="item.githuburl" target="_blank">
-                                <img :src="item.headimg" style="width: 30px;height: 30px;border-radius: 100%;margin-top: 6px;">
-                            </a>
-                        </div>
-                        <div class="layout-left" style="margin-left: 7px">
-                            <p style="font-size: 17px;">
-                                <a :href="item.githuburl" target="_blank">
-                                    {{item.username}}
-                                </a>
-                            </p>
-                            <p style="font-size: 1px;">
-                                {{item.createtime}}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="content">
-                        <p>{{item.content}}</p>
-                    </div>
-                </Card>
-                <div style="margin-top: 20px">
-                    <Page :total="total" :page-size="pageInfo.pageSize" show-total @on-change="e=>{pageSearch(e)}"></Page>
-                </div>
-            </div>
-
-            <div class="box-flex width-100 margin-auto margin-top-2 border-top border-color-bfbfbf"></div>
-
-            <div class="box-flex margin-auto margin-top-2 flex-direction-column flex-justify-center flex-items-center" style="width: 100%;margin-bottom: 30px;">
-                <div class=" width-100 flex-direction-row">
-                  <div class="box-flex flex-1 padding-all-5x">
-                    <span><Icon type="edit"></Icon>发表回复</span>
-                  </div>
-                  <div class="box-flex flex-6 width-100 padding-all-5x">
-                    <Input v-model="textarea" type="textarea" :rows="6" placeholder="内容" />
-                  </div>
-                </div>
-                <div class="box-flex width-100 margin-top-2 flex-items-flex-end flex-justify-flex-end margin-bottom-3">
-                  <Button type="primary" @click="sendCard()">发表</Button>
-                </div>
-              </div>
-	      </div>
-	    </div>
+      <el-card v-for="(item,index) in replyCardList" :key="index" shadow="hover">
+        <div slot="header" class="clearfix">
+          <a :href="$store.state.userUrlPre+item.userid" target="_blank" class="user-info">
+            <img :src="item.headimg">
+          </a>
+          <div class="user-info">
+            <a class="user-name" :href="$store.state.userUrlPre+item.userid" target="_blank">
+              {{item.username}}
+            </a>
+            <p class="post-time">
+              {{item.createtime}}
+            </p>
+          </div>
+        </div>
+        <div>
+          <span class="post-content">{{item.content}}</span>
+        </div>
+      </el-card>
+      <el-pagination
+        hide-on-single-page
+        class="pagination"
+        background
+        layout="total, prev, pager, next"
+        :total="total"
+        :page-size="pageInfo.pageSize"
+        @current-change="e=>{pageSearch(e)}">
+      </el-pagination>
+      <el-divider></el-divider>
+      <div class="send-card">
+        <div class="send-card-sub">
+          <span><i class="el-icon-edit-outline"></i>发表回复</span>
+        </div>
+        <div class="send-card-sub">
+          <el-input v-model="textarea" type="textarea" rows="6" placeholder="内容"></el-input>
+        </div>
+      </div>
+      <div class="send-button">
+        <el-button type="primary" @click="sendCard()">发表</el-button>
+      </div>
   </div>
 </template>
 <script>
@@ -114,6 +76,7 @@ export default {
       postcardid: null,
       postcard: {
         id: "",
+        userid: null,
         username: "",
         title: "",
         content: "",
@@ -193,6 +156,7 @@ export default {
     postcardSet(e) {
       this.postcard.id = e.id;
       this.postcard.username = e.username;
+      this.postcard.userid = e.userid;
       this.postcard.title = e.title;
       this.postcard.content = e.content;
       this.postcard.interestid = e.interestid;
@@ -224,7 +188,7 @@ export default {
           })
             .then(
               function(response) {
-                this.$Message.info("回复成功");
+                this.$message.info("回复成功");
                 this.textarea = "";
                 // this.pageInfo.page = 0;
                 this.replyCardListGet({
@@ -235,16 +199,87 @@ export default {
             )
             .catch(
               function(error) {
-                this.$Message.error("请重新登录");
+                this.$message.error("请重新登录");
               }.bind(this)
             );
         } else {
-          this.$Message.error("登录后，才能回复！");
+          this.$message.error("登录后，才能回复！");
         }
       } else {
-        this.$Message.error("请填写回复内容");
+        this.$message.error("请填写回复内容");
       }
     }
   }
 };
 </script>
+<style type="text/css" scoped>
+.card-layout {
+  background: #fff;
+  margin: 10px 0;
+  padding: 10px;
+}
+.card-layout .card-title {
+  background: #eceef2;
+  border-bottom: 1px solid #e8eaec;
+  padding: 14px 16px;
+  line-height: 1;
+}
+.card-layout .card-title p {
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+  line-height: 20px;
+  font-size: 14px;
+  color: #17233d;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.user-info {
+  float: left;
+  font-size: 14px;
+  color: #333;
+  margin-right: 5px;
+}
+.user-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+}
+.user-info .user-name {
+  font-size: 17px;
+}
+.user-info .post-time {
+  font-size: 12px;
+}
+.post-content {
+  font-size: 14px;
+}
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: ".";
+  clear: both;
+  height: 0;
+}
+.clearfix {
+  zoom: 1;
+}
+.pagination {
+  margin-top: 10px;
+}
+.send-card {
+  padding: 0 15px;
+}
+.send-card .send-card-sub {
+  font-size: 14px;
+  padding: 5px 0;
+}
+.send-button {
+  margin-top: 10px;
+  margin-left: 15px;
+  padding-bottom: 10px;
+}
+</style>

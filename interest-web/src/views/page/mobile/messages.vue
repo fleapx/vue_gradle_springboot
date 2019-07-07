@@ -1,30 +1,35 @@
 <template>
     <div class="unread-msg-wrapper">
-        <Card v-for="(item, index) in messages" :key="item.id" class="msg-card-item">
-            <div @click="read(item.id,item.isread)">
-                <div class="synopsis">
-                    <Avatar shape="square" icon="person" :src="item.replyUserHeadimg" :title="item.replyUsername" />
+      <el-card shadow="hover" v-for="(item, index) in messages" :key="item.id" class="msg-card-item" @click.native="read(item.id,item.isread)">
+        <el-row :gutter="24">
+          <el-col :span="24" class="synopsis">
+            <el-avatar shape="square" size="small" :src="item.replyUserHeadimg"></el-avatar>
+            <span class="user-name">{{item.replyUsername}}</span>
+            <span class="time">{{dateGet(item.replytime)}}</span>
+            <span>回复：</span>
 
-                    <span class="user-name">{{item.replyUsername}}</span>
-                    <span class="time">{{dateGet(item.replytime)}}</span>
-                    <span>回复：</span>
+            <router-link v-if="item.form == 0" :to="{ path: '/mobile/card/' + item.toId }">{{item.title}}</router-link>
+            <router-link v-if="item.form == 1" :to="{ path: '/article/detail/' + item.toId }">{{item.title}}</router-link>
+          </el-col>
+        </el-row>
+        <el-divider></el-divider>
+        <div class="reply-content">
+            <p>{{item.replyContent}}</p>
+        </div>
+        <i v-if="item.isread == 0" class="el-icon-view unread-symbol"></i>
+      </el-card>
 
-                    <router-link :to="{ path: 'card/' + item.cardid }"><span class="post-title">{{item.postCardTitle}}</span></router-link>
-                </div>
-                <Divider /> 
-                <div class="reply-content">
-                    <p>{{item.replyContent}}</p>
-                </div>
+      <el-pagination
+        hide-on-single-page
+        class="pagin"
+        background
+        layout="total, prev, pager, next"
+        :total="totalCount"
+        :page-size="pageSize"
+        @current-change="e=>{pageSearch(e)}">
+      </el-pagination>
 
-                <Icon v-if="item.isread == 0" class="unread-symbol" type="chatbox-working" color="red" size="20"></Icon>
-            </div>
-        
-        </Card>
-
-        <Page :total="totalCount" class="pagin" show-total
-            @on-change=""></Page>
     </div>
-    
 </template>
 
 <script>
@@ -50,14 +55,19 @@ export default {
         let data = response.data.data;
         _this.messages = data.data;
         _this.totalCount = data.totalCount;
+        console.log(_this.messages);
       })
       .catch(function(error) {
-        _this.$Message.error("查询失败，请稍后重试");
+        _this.$messages({
+          messages: '查询失败，请稍后重试',
+          type: 'error'
+        });
       });
   },
 
   methods: {
     read(id, isread) {
+      console.log('read');
       if (isread == 1) {
         return;
       }
@@ -82,8 +92,30 @@ export default {
           }.bind(this)
         )
         .catch(function(error) {
-          _this.$Message.error("已读失败，请稍后重试");
+          _this.$messages({
+            messages: '已读失败，请稍后重试',
+            type: 'error'
+          });
         });
+    },
+    pageSearch(e) {
+      this.page = e - 1;
+      let _this = this;
+    this.axios
+      .get(
+        "/msgrecords/user?pageSize= " + _this.pageSize + "&page=" + _this.page
+      )
+      .then(function(response) {
+        let data = response.data.data;
+        _this.messages = data.data;
+        _this.totalCount = data.totalCount;
+      })
+      .catch(function(error) {
+        _this.$messages({
+            messages: '查询失败，请稍后重试',
+            type: 'error'
+          });
+      });
     }
   }
 };
@@ -91,32 +123,27 @@ export default {
 
 <style scoped lang="scss">
 .unread-msg-wrapper {
+  background: #fff;
+  padding: 10px;
   position: relative;
-  margin: auto;
-  padding: 20px 0;
+  font-size: 14px;
 
   .msg-card-item {
-    cursor: pointer;
+    position: relative;
   }
 
   .unread-symbol {
+    font-size: 18px;
+    color: red;
     position: absolute;
-    top: 2em;
-    right: 0.5em;
+    top: 1.5em;
+    right: 1em;
   }
 
   .synopsis {
-    padding-right: 10px;
     span {
       line-height: 30px;
       margin-right: 10px;
-    }
-    .post-title{
-      margin-top: 10px;
-      word-wrap: break-word;
-      word-break: break-all;
-      overflow: hidden;
-      color: #2d64b3;
     }
   }
 

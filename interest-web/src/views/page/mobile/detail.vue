@@ -32,11 +32,11 @@
             <span>{{item.replyCount}}</span>
           </div>
         </div>
-        <div>
-          <router-link :to="('/mobile/card/'+item.id)">
-              <span class="title-text">{{item.title}}</span>
-          </router-link>
-        </div>
+        <router-link :to="('/mobile/card/'+item.id)">
+          <div>
+            <span class="title-text">{{item.title}}</span>
+          </div>
+        </router-link>
       </el-card>
       <el-pagination
         hide-on-single-page
@@ -297,7 +297,6 @@ color:#f90;
   margin-left: 15px;
   padding-bottom: 10px;
 }
-
 .clearfix:after {
   visibility: hidden;
   display: block;
@@ -308,20 +307,5 @@ color:#f90;
 }
 .clearfix {
   zoom: 1;
-}
-.head {
-  border-bottom: 1px solid #e8eaec;
-}
-.layout-left {
-  float: left;
-}
-.content p{
-  word-wrap: break-word;
-  word-break: break-all;
-  overflow: hidden;
-}
-.chat {
-  color:#f90;
-  float: right;
 }
 </style>
