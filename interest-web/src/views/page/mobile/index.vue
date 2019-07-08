@@ -217,7 +217,7 @@ export default {
       } else if (m == "messages") {
         this.$router.push({ path: "/mobile/messages" });
       } else if(m == "name"){
-        this.$router.push(this.$store.state.userMobileUrlPre + this.user.id);
+        this.$router.push('/mobile/user/' + this.user.id);
       }
     },
     toLogin() {

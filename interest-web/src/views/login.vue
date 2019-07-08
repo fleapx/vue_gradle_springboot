@@ -39,10 +39,10 @@
           </el-form-item>
           <div class="other-login">
             <a :href="githubLoginUrl">
-                <img src="../images/GitHub.svg" class="margin-right-20" />
+                <img src="@images/GitHub.svg" class="margin-right-20" />
             </a>
             <a :href="qqLoginUrl">
-                <img src="../images/social-qq.svg" />  
+                <img src="@images/social-qq.svg" />  
             </a>
           </div>
         </el-form>

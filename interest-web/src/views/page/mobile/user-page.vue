@@ -282,15 +282,11 @@ export default {
     color: #8a8a8a;
     line-height: 24px;
   }
-  .list-user-other .right-info {
-    line-height: 24px;
-    float: right;
-  }
-  .list-user-other .right-info .text {
+  .list-user-other .text {
     margin-right: 4px;
     color: #8a8a8a;
   }
-  .list-user-other .right-info .num {
+  .list-user-other .num {
     color: #3399ea;
   }
   .interval {
