@@ -1,143 +1,56 @@
-<style scoped>
-.layout {
-  border: 1px solid #d7dde4;
-  background: #e9eaec;
-  /*position: relative;*/
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-}
-.layout-breadcrumb {
-  padding: 10px 15px 0;
-}
-.layout-content {
-  /*height: 80%;*/
-  /*min-height: 100%;*/
-  min-height: 200px;
-  margin: 15px;
-  overflow: hidden;
-  background: #f8f8f9;
-  border-radius: 4px;
-  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
-}
-.layout-content-main {
-  padding: 10px;
-}
-.layout-copy {
-  height: 4%;
-  text-align: center;
-  padding: 10px 0 20px;
-  color: #009688;
-}
-.layout-menu-left {
-  background: #464c5b;
-}
-.layout-header {
-  height: 60px;
-  background: #f8f8f9;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  text-align: right;
-}
-.layout-header img {
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  border-radius: 20px;
-  margin-top: 10px;
-  /*margin-right: 50px;*/
-}
-.layout-header strong {
-  color: #ff5722;
-  font-size: 10px;
-}
-.layout-logo-left {
-  /*width: 50%;*/
-  text-align: center;
-  /*height: 30px;*/
-  /*background: #5b6270;*/
-  border-radius: 3px;
-  margin: 15px auto 30px auto;
-}
-.layout-logo-left img {
-  width: 20%;
-  height: 100%;
-}
-.layout-logo-left strong {
-  color: #f5af00;
-  font-size: 10px;
-  margin-left: 10px;
-}
-.dropdown-menu {
-  text-align: center;
-  /*box-shadow: 0 1px 6px #00BCD4;*/
-}
-.layout-nav {
-  /*width: 315px;
-        margin: 0 auto;
-        margin-right: 20px;*/
-  height: inherit;
-  float: right;
-}
-</style>
 <template>
     <div class="layout">
-        <Row type="flex" style="position:absolute;left:0;top:0;width:100%;">
-            <Col span="4" class="layout-menu-left">
-                <div class="layout-logo-left">
-                  <div>
-                    <a @click="backHome()">
-                        <img src="../../images/logo.jpg" style="width: 50px;height: 50px;" align="absmiddle" />
-                    </a>
-                      <strong>控制台</strong>
-                  </div>
-                </div>
-                <Menu active-name="1-2" theme="dark" width="auto" :open-names="['1']" @on-select="m=>{select(m)}">
-                    <Submenu v-for="pmenu in menuList" :name="pmenu.id" :key="pmenu.id">
-                        <template slot="title">
-                            <Icon :type="pmenu.icon"></Icon>
-                            {{pmenu.name}}
-                        </template>
-                        <MenuItem v-for="cmenu in pmenu.children" :name="cmenu.id" :key="cmenu.id">
-                            <Icon :type="cmenu.icon"></Icon>
-                            {{cmenu.name}}
-                        </MenuItem>
-                    </Submenu>
-                </Menu>
-            </Col>
-            <Col span="20">
-                <div class="layout-header">
-                    <Menu mode="horizontal" theme="light"  :style="{height:'65px',width:'100%'}"  @on-select="m=>{menuSelect(m)}" >
-                        <div style="width: 95%;margin: 0 auto">
-                            <div class="layout-nav">
-                                <MenuItem name="2">
-                                    <Icon type="ios-person"></Icon>
-                                    {{userName}}
-                                </MenuItem>
-                                <MenuItem name="1">
-                                    <Icon type="log-out"></Icon>
-                                    退出
-                                </MenuItem>
-                            </div>
-                        </div>
-                    </Menu>
-                </div>
-                <div class="layout-breadcrumb">
-                    <Breadcrumb>
-                        <BreadcrumbItem to="/base/welcome">Home</BreadcrumbItem>
-                        <BreadcrumbItem v-for="item in breadcrumbData" :to="item.url" :key="item.id">{{item.name}}</BreadcrumbItem>
-                    </Breadcrumb>
-                </div>
-                <div class="layout-content">
-                    <router-view></router-view>
-                </div>
-                <div class="layout-copy">
-                    2018-2020 &copy; smallsail-wh
-                </div>
-            </Col>
-        </Row>
+      <el-container>
+        <el-aside class="left-aside" width="17%">
+          <div class="logo">
+            <a @click="backHome()">
+                <img src="@images/logo.jpg" align="absmiddle" />
+            </a>
+            <span>控制台</span>
+          </div>
+          <el-menu 
+            background-color="#515a6e"
+            text-color="#fff"
+            active-text-color="#ffd04b">
+            <el-submenu v-for="pmenu in menuList" :index="pmenu.id" :key="pmenu.id">
+              <template slot="title">
+                <Icon :type="pmenu.icon"></Icon>
+                {{pmenu.name}}
+              </template>
+              <el-menu-item v-for="cmenu in pmenu.children" :index="cmenu.url" :key="cmenu.id" @click="menuClick(cmenu)">
+                <Icon :type="cmenu.icon"></Icon>
+                {{cmenu.name}}
+              </el-menu-item>
+            </el-submenu>
+          </el-menu>
+        </el-aside>
+
+        <el-container>
+          <el-header class="header">
+            <div class="login-out" @click="loginOut">
+              <i class="el-icon-switch-button"></i>
+              退出
+            </div>
+            <div class="user-info">
+              <el-avatar :size="size" :src="headImg"></el-avatar>
+              <span>{{userName}}</span>
+            </div>
+          </el-header>
+
+          <el-main>
+            <router-view></router-view>
+          </el-main>
+
+          <el-footer class="layout-footer-center" height="80px">
+            <div>
+              <a href="https://github.com/smallsnail-wh" target="_blank">
+                <img src="@images/GitHub.svg" width="40px" height="40px"/>
+              </a>
+            </div>
+            <p>Copyright &copy; 2019 smallsail-wh</p>
+          </el-footer>
+        </el-container>
+      </el-container>
     </div>
 </template>
 <script>
@@ -146,6 +59,7 @@ export default {
     return {
       /*用户名*/
       userName: null,
+      headImg: null,
       /*一级菜单*/
       menuList: [],
       /*二级菜单*/
@@ -154,7 +68,7 @@ export default {
       breadcrumbData: []
     };
   },
-  mounted() {
+  created() {
     /*this.$router.push();*/
     /*this.userName = window.localStorage.getItem("currentUser_name");*/
     this.axios({
@@ -164,6 +78,7 @@ export default {
       .then(
         function(response) {
           this.userName = response.data.data.name;
+          this.headImg = response.data.data.headimg;
         }.bind(this)
       )
       .catch(function(error) {
@@ -188,22 +103,16 @@ export default {
       });
   },
   methods: {
-    menuSelect(e) {
-      if (e == 1) {
-        this.$store.dispatch("users/loginOUt", { router: this.$router });
-      }
+    menuClick(val){
+      console.log(val);
+      this.$router.push(val.url);
+    },
+    loginOut(){
+      this.$store.dispatch("users/loginOUt", { router: this.$router });
     },
     /*菜单选择事件*/
-    select(e) {
-      var filterMenus = this.menuSub.filter(function(menu) {
-        return menu.url != null && menu.url != "" && menu.id == e;
-      });
-      this.$router.push(filterMenus[0].url);
-      this.breadcrumbData.splice(0, 1, filterMenus[0]);
-    },
-    /*下拉菜单选择事件*/
-    dropdownSelect(e) {
-      this.$store.dispatch("users/loginOUt", { router: this.$router });
+    select(index, indexPath) {
+      this.$router.push(index);
     },
     backHome() {
       this.$router.push("/page/home");
@@ -211,3 +120,75 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.el-menu {
+  border-right: 0;
+}
+.layout {
+  min-width: 1000px;
+  background: #f5f7f9;
+
+  .left-aside {
+    background: #464c5b;
+
+    .logo {
+      text-align: center;
+      padding: 20px;
+
+      img {
+        width: 50px;
+        height: 50px;
+      }
+
+      span {
+        color: #f5af00;
+        font-size: 16px;
+        margin-left: 10px;
+      }
+    }
+  }
+  .header {
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.05);
+
+    .user-info {
+      float: right;
+      height: 60px;
+      display: flex;
+      display: -webkit-flex;
+      align-items: center;
+      padding: 0 20px;
+
+      span {
+        color: #515a6e;
+        font-size: 14px;
+        margin-right: 10px;
+      }
+    }
+    .login-out {
+      float: right;
+      height: 60px;
+      display: flex;
+      display: -webkit-flex;
+      align-items: center;
+      color: #515a6e;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 0 20px;
+
+      &:hover {
+        color: #5cb6ff;
+      }
+
+      i {
+        margin-right: 5px;
+      }
+    }
+  }
+  .layout-footer-center {
+    text-align: center;
+    background: #fff;
+    padding: 10px;
+  }
+}
+</style>
