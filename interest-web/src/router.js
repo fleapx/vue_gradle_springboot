@@ -6,17 +6,18 @@ Vue.use(VueRouter);
 
 const routers = [
   {
-    path: "/mobile/test",
+    path: "/test",
     meta: {
       title: "smallsnail-wh"
     },
-    component: resolve => require(["./views/page/mobile/index.vue"], resolve),
+    component: resolve => require(["./views/console/base.vue"], resolve),
     children: [
       {
-        path: ":id",
+        path: "role",
+        name: "welcome",
         component: resolve => require(["./views/test.vue"], resolve),
         meta: {
-          title: "home"
+          title: "welcome"
         }
       }
     ]
@@ -231,7 +232,7 @@ const routers = [
       {
         path: "menu",
         name: "menu",
-        component: resolve => require(["./views/console/menu.vue"], resolve),
+        component: resolve => require(["./views/console/sys/menu.vue"], resolve),
         meta: {
           title: "menu"
         }
@@ -239,7 +240,7 @@ const routers = [
       {
         path: "role",
         name: "role",
-        component: resolve => require(["./views/console/role.vue"], resolve),
+        component: resolve => require(["./views/console/sys/role.vue"], resolve),
         meta: {
           title: "role"
         }
@@ -247,7 +248,7 @@ const routers = [
       {
         path: "user",
         name: "user",
-        component: resolve => require(["./views/console/user.vue"], resolve),
+        component: resolve => require(["./views/console/sys/user.vue"], resolve),
         meta: {
           title: "user"
         }

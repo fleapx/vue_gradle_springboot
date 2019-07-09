@@ -15,6 +15,8 @@
       </el-row>
     </div>
 
+    <el-divider></el-divider>
+
     <div class="action-block">
       <el-button type="primary" icon="el-icon-plus" size="small" @click="openNewModal">新建</el-button>
       <el-button type="success" icon="el-icon-edit" size="small" @click="openModifyModal">修改</el-button>
@@ -584,7 +586,7 @@ export default {
   padding: 20px;
 
   .search-block {
-    margin-bottom: 20px;
+    
 
     .search-select {
       width: 200px;

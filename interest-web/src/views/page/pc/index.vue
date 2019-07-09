@@ -58,7 +58,7 @@
         <el-footer class="layout-footer-center" height="100">
           <div>
               <a href="https://github.com/smallsnail-wh" target="_blank">
-                  <Icon style="color: rebeccapurple;" size="40" type="logo-github"></Icon>
+                <img src="@images/GitHub.svg" width="40px" height="40px"/>
               </a>
           </div>
           <p>Copyright &copy; 2019 smallsail-wh</p>

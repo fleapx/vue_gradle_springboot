@@ -13,6 +13,8 @@
       </el-row>
     </div>
 
+    <el-divider></el-divider>
+
     <div class="action-block">
       <el-button type="success" icon="el-icon-edit" size="small" @click="openModifyModal">修改</el-button>
       <el-button type="danger" icon="el-icon-delete" size="small" @click="del">删除</el-button>
@@ -43,7 +45,7 @@
       <el-table-column prop="createTime" label="注册时间"></el-table-column>
       <el-table-column label="配置角色" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-setting" circle @click="relationSet(scope.row)"></el-button>
+          <el-button type="primary" icon="el-icon-setting" circle @click="relationSet(scope.row)" size="small"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -590,7 +592,6 @@ export default {
   padding: 20px;
 
   .search-block {
-    margin-bottom: 20px;
 
     .search-input {
       width: 200px;

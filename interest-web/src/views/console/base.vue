@@ -1,7 +1,7 @@
 <template>
     <div class="layout">
       <el-container>
-        <el-aside class="left-aside" width="17%">
+        <el-aside :style="'min-height:' + asideHeight" class="left-aside" width="17%">
           <div class="logo">
             <a @click="backHome()">
                 <img src="@images/logo.jpg" align="absmiddle" />
@@ -57,6 +57,7 @@
 export default {
   data() {
     return {
+      asideHeight: 'auto',
       /*用户名*/
       userName: null,
       headImg: null,
@@ -69,6 +70,7 @@ export default {
     };
   },
   created() {
+    this.asideHeight = window.innerHeight + 'px';
     /*this.$router.push();*/
     /*this.userName = window.localStorage.getItem("currentUser_name");*/
     this.axios({
