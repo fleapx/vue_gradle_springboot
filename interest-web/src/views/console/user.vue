@@ -1,71 +1,121 @@
-<style scoped>
-  .operation-button{
-    margin-right: 3px;
-  }
-</style>
 <template>
-	<div style="margin: 20px;">
-        <div>
-            <Row style="margin-bottom: 25px;">
-                <Col span="8">用户名：
-                	<Input v-model="name" placeholder="请输入..." style="width:200px" />
-                </Col>
-                <Col span="8"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
-            </Row>
-        </div>            
-        <div>
-            <ul>
-                <li>
-                    <Button class="operation-button" type="success" icon="md-build" @click="openModifyModal()">修改</Button>
-                    <Button type="error" icon="md-trash" @click="del()">删除</Button>
-                </li>
-                <li>
-                    <div style="padding: 10px 0;">
-                    	<Table border :columns="columns1" :data="data1" :height="400" @on-selection-change="s=>{change(s)}" @on-row-dblclick="s=>{dblclick(s)}"></Table>
-                    </div> 
-                </li>
-                <li>
-                    <div style="text-align: right;">
-                        <Page :total="total" :page-size="pageInfo.pageSize" show-elevator show-total @on-change="e=>{pageSearch(e)}"></Page>
-                    </div>  
-                </li>
-            </ul>
-        </div>
-        <!--修改modal-->  
-        <Modal :mask-closable="false" :visible.sync="modifyModal" v-model="modifyModal" width="600" title="修改" @on-ok="modifyOk()" @on-cancel="cancel()">
-             <Form :label-width="80" >
-                <Row>
-                    <Col span="12">
-                        <Form-item label="登录名:">
-                            <Input v-model="userModify.name" style="width: 204px" disabled="disabled" />
-                        </Form-item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span="12">
-                        <Form-item label="用户类型:">
-                            <Select v-model="userModify.usertype" style="width:200px">
-                                <Option  :value="0">普通用户</Option>
-                                <Option  :value="1">管理员</Option>
-                            </Select>
-                            <!-- <Input v-model="userModify.email" style="width: 204px"/> -->
-                        </Form-item>
-                    </Col>
-                </Row>
-            </Form>
-        </Modal>
-        <!--配置角色modal-->  
-        <Modal v-model="roleModal" width="500" title="角色配置" @on-ok="roleOk()" @on-cancel="cancel()">
-            <div>
-                <Table border :columns="columns2" :data="data2" :height="260"  @on-selection-change="s=>{change2(s)}"></Table>
-            </div>
-        </Modal>
+  <div class="user-layout">
+
+    <div class="search-block">
+      <el-row :gutter="24">
+        <el-col :span="8">
+          用户名：
+          <el-input class="search-input" v-model="name" placeholder="请输入..."></el-input>
+        </el-col>
+        <el-col :span="8">
+          <el-button type="primary" icon="el-icon-search" round size="small" @click="search">搜索</el-button>
+        </el-col>
+      </el-row>
     </div>
+
+    <div class="action-block">
+      <el-button type="success" icon="el-icon-edit" size="small" @click="openModifyModal">修改</el-button>
+      <el-button type="danger" icon="el-icon-delete" size="small" @click="del">删除</el-button>
+    </div>
+
+    <el-table class="table-block" :data="data1" border @selection-change="change" @row-dblclick="dblclick">
+      <el-table-column type="selection" width="55" align="center"></el-table-column>
+      <el-table-column prop="name" label="用户名"></el-table-column>
+      <el-table-column label="头像" width="80" align="center">
+        <template slot-scope="scope">
+          <img :src="scope.row.headimg" width="30px" height="30px">
+        </template>
+      </el-table-column>
+      <el-table-column label="url" width="300">
+        <template slot-scope="scope">
+          <a :href="scope.row.url" target="_blank">
+            {{scope.row.url}}
+          </a>
+        </template>
+      </el-table-column>
+      <el-table-column prop="email" label="邮箱"></el-table-column>
+      <el-table-column label="用户类型" align="center">
+        <template slot-scope="scope">
+          <strong v-if="scope.row.usertype == 0">普通用户</strong>
+          <strong v-if="scope.row.usertype == 1">管理员</strong>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="注册时间"></el-table-column>
+      <el-table-column label="配置角色" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-setting" circle @click="relationSet(scope.row)"></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-pagination
+      class="pagination-block"
+      background
+      layout="total, prev, pager, next"
+      :total="total"
+      :page-size="pageInfo.pageSize"
+      @current-change="e=>{pageSearch(e)}">
+    </el-pagination>
+
+    <!--修改modal-->
+    <el-dialog
+      title="修改"
+      :visible.sync="modifyModal"
+      width="600px"
+      :close-on-click-modal="false">
+      <span>
+        <el-form :model="email" :rules="emailRule" ref="email" label-width="80px">
+          <el-form-item label="登录名:">
+            <el-input v-model="userModify.name" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="用户类型:">
+            <el-select v-model="userModify.usertype" placeholder="请选择">
+              <el-option
+                v-for="item in userTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </span>
+      <span slot="footer">
+        <el-button @click="modifyModal = false">取 消</el-button>
+        <el-button type="primary" @click="modifyOk">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!--配置角色modal--> 
+    <el-dialog
+      title="角色配置"
+      :visible.sync="roleModal"
+      width="500px"
+      :close-on-click-modal="false">
+      <span>
+        <el-table ref="roleTable" :data="data2" border @selection-change="change2">
+          <el-table-column type="selection" width="55" align="center"></el-table-column>
+          <el-table-column prop="name" label="角色名称" width="120"></el-table-column>
+          <el-table-column prop="describe" label="描述"></el-table-column>
+        </el-table>
+      </span>
+      <span slot="footer">
+        <el-button @click="roleModal = false">取 消</el-button>
+        <el-button type="primary" @click="roleOk">确 定</el-button>
+      </span>
+    </el-dialog> 
+  </div>
 </template>
 <script>
 export default {
   data() {
     return {
+      userTypeOptions: [{
+        value: 0,
+        label: '普通用户'
+      },{
+        value: 1,
+        label: '管理员'
+      }],
       /*用于查找的登录名*/
       name: null,
       /*选择的数量*/
@@ -173,98 +223,6 @@ export default {
           { type: "email", message: "输入正确的邮箱格式", trigger: "blur" }
         ]
       },
-      /*表显示字段*/
-      columns1: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "用户名",
-          key: "name"
-        },
-        {
-          title: "头像",
-          key: "headimg",
-          width: 80,
-          align: "center",
-          render: (h, params) => {
-            return h(
-              "img",
-              {
-                attrs: {
-                  src: params.row.headimg
-                },
-                style: {
-                  width: '30px',  
-                  height: '30px'
-                }
-              }
-            );
-          }
-        },
-        {
-          title: "url",
-          key: "url",
-          width: 300,
-          render: (h, params) => {
-            return h(
-              "a",
-              {
-                attrs: {
-                  href: params.row.url,
-                  target: "_blank"
-                }
-              },
-              params.row.url
-            );
-          }
-        },
-        {
-          title: "邮箱",
-          key: "email"
-        },
-        {
-          title: "用户类型",
-          align: "center",
-          key: "usertype",
-          render: (h, params) => {
-            if (params.row.usertype == 0) {
-              return h("div", [h("strong", null, "普通用户")]);
-            } else if (params.row.usertype == 1) {
-              return h("div", [h("strong", null, "管理员")]);
-            }
-          }
-        },
-        {
-          title: "注册时间",
-          key: "createTime"
-        },
-        {
-          title: "操作",
-          align: "center",
-          key: "action",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "info"
-                  },
-                  on: {
-                    click: () => {
-                      this.relationSet(params.row);
-                    }
-                  }
-                },
-                "配置角色"
-              )
-            ]);
-          }
-        }
-      ],
       /*表数据*/
       data1: [],
       /*表显示字段*/
@@ -286,8 +244,9 @@ export default {
       ],
       /*表数据*/
       data2: [],
+      userIdForUpdateRole: null,
       /*data2的临时存储*/
-      data2Temp: [],
+      // data2Temp: [],
       /*用户与角色关系列表*/
       relationList: null
     };
@@ -304,7 +263,7 @@ export default {
     })
       .then(
         function(response) {
-          this.data2Temp = response.data.data;
+          this.data2 = response.data.data;
         }.bind(this)
       )
       .catch(function(error) {
@@ -449,7 +408,7 @@ export default {
                     pageInfo: this.pageInfo,
                     name: this.name
                   });
-                  this.$Message.info("新建成功");
+                  this.$message.info("新建成功");
                 }.bind(this)
               )
               .catch(function(error) {
@@ -457,14 +416,14 @@ export default {
               });
             this.newModal = false;
           } else {
-            this.$Message.error("两次输入的密码不相同！");
+            this.$message.error("两次输入的密码不相同！");
             this.loading = false;
             this.$nextTick(() => {
               this.loading = true;
             });
           }
         } else {
-          this.$Message.error("表单验证失败!");
+          this.$message.error("表单验证失败!");
           setTimeout(() => {
             this.loading = false;
             this.$nextTick(() => {
@@ -478,7 +437,7 @@ export default {
     openModifyModal() {
       if (this.count > 1 || this.count < 1) {
         this.modifyModal = false;
-        this.$Message.warning("请至少选择一项(且只能选择一项)");
+        this.$message.warning("请至少选择一项(且只能选择一项)");
       } else {
         this.modifyModal = true;
       }
@@ -503,7 +462,7 @@ export default {
               pageInfo: this.pageInfo,
               name: this.name
             });
-            this.$Message.info("修改成功");
+            this.$message.info("修改成功");
           }.bind(this)
         )
         .catch(function(error) {
@@ -513,7 +472,7 @@ export default {
     },
     /*modal的cancel点击事件*/
     cancel() {
-      this.$Message.info("点击了取消");
+      this.$message.info("点击了取消");
     },
     /*table选择后触发事件*/
     change(e) {
@@ -546,7 +505,7 @@ export default {
               });
               this.groupId = null;
               this.count = 0;
-              this.$Message.info("删除成功");
+              this.$message.info("删除成功");
             }.bind(this)
           )
           .catch(function(error) {
@@ -561,38 +520,26 @@ export default {
       this.data1.sort();
     },
     /*流程配置*/
-    relationSet(e) {
+    relationSet(val) {
+
       this.roleModal = true;
-      this.data2 = [];
+      this.userIdForUpdateRole = val.id;
+      // this.data2 = [];
+      
       this.axios({
         method: "get",
-        url: "/relations/" + e.id
+        url: "/relations/" + val.id
       })
         .then(
           function(response) {
-            var roleList = [];
-            for (var i in response.data.data) {
-              roleList.push(response.data.data[i].roleId);
-            }
-            for (var i in this.data2Temp) {
-              if (roleList.indexOf(this.data2Temp[i].id) == -1) {
-                this.data2.push({
-                  id: this.data2Temp[i].id,
-                  name: this.data2Temp[i].name,
-                  describe: this.data2Temp[i].describe,
-                  userId: e.id,
-                  _checked: false
-                });
-              } else {
-                this.data2.push({
-                  id: this.data2Temp[i].id,
-                  name: this.data2Temp[i].name,
-                  describe: this.data2Temp[i].describe,
-                  userId: e.id,
-                  _checked: true
-                });
-              }
-            }
+            this.$refs.roleTable.clearSelection();
+            response.data.data.forEach(e => {
+              this.data2.forEach(row => {
+                if(e.roleId == row.id) {
+                  this.$refs.roleTable.toggleRowSelection(row,true);
+                }
+              });
+            });
           }.bind(this)
         )
         .catch(function(error) {
@@ -609,7 +556,8 @@ export default {
         })
           .then(
             function(response) {
-              this.$Message.info("配置成功");
+              this.roleModal = false;
+              this.$message.info("配置成功");
             }.bind(this)
           )
           .catch(function(error) {
@@ -623,12 +571,12 @@ export default {
       this.relationList = [];
       if (e.length == 0) {
         this.relationList.push({
-          userId: this.data2[0].userId
+          userId: this.userIdForUpdateRole
         });
       }
       for (var i in e) {
         this.relationList.push({
-          userId: e[i].userId,
+          userId: this.userIdForUpdateRole,
           roleId: e[i].id
         });
       }
@@ -636,3 +584,27 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.user-layout {
+  background-color: #fff;
+  padding: 20px;
+
+  .search-block {
+    margin-bottom: 20px;
+
+    .search-input {
+      width: 200px;
+    }
+  }
+
+  .action-block {
+    margin-bottom: 10px;
+  }
+  .table-block {
+    margin-bottom: 10px;
+  }
+  .pagination-block {
+    text-align: right;
+  }
+}
+</style>

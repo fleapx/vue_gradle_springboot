@@ -104,7 +104,6 @@ export default {
   },
   methods: {
     menuClick(val){
-      console.log(val);
       this.$router.push(val.url);
     },
     loginOut(){

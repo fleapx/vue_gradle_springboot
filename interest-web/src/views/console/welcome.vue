@@ -1,5 +1,5 @@
 <style scoped>
-#welcome {
+.welcome {
   width: 100%;
   height: 100%;
   background-size: cover;
@@ -8,14 +8,15 @@
   box-shadow: 0 0px 3px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
-#welcome img {
+.welcome img {
   width: 100%;
-  height: 100%;
+  height: auto;
   overflow: auto;
+  display: block;
 }
 </style>
 <template>
-    <div id="welcome">
+    <div class="welcome">
         <img src="../../images/welcome2.jpg" />
     </div>
 </template>
