@@ -1,118 +1,146 @@
-<style scoped>
-  .operation-button{
-    margin-right: 3px;
-  }
-</style>
 <template>
-	<div style="margin: 20px;">
-        <div>
-            <Row style="margin-bottom: 25px;">
-                <Col span="8">菜单名称：
-                    <Select v-model="menuId" filterable clearable style="width: 200px">
-                        <Option v-for="item in menuList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                </Col>
-                <Col span="8"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
-            </Row>
-        </div>            
-        <div>
-            <ul>
-                <li>
-                    <Button class="operation-button" type="primary" icon="md-add" @click="openNewModal()">新建</Button>
-                    <Button class="operation-button" type="success" icon="md-build" @click="openModifyModal()">修改</Button>
-                    <Button type="error" icon="md-trash" @click="del()">删除</Button>
-                </li>
-                <li>
-                    <div style="padding: 10px 0;">
-                    	<Table border :columns="columns1" :data="data1" :height="400" @on-selection-change="s=>{change(s)}" @on-row-dblclick="s=>{dblclick(s)}"></Table>
-                    </div> 
-                </li>
-                <li>
-                    <div style="text-align: right;">
-                        <Page :total="total" :page-size="pageInfo.pageSize" show-elevator show-total @on-change="e=>{pageSearch(e)}"></Page>
-                    </div>  
-                </li>
-            </ul>
-        </div>
-        <!--添加modal-->  
-        <Modal :mask-closable="false" :visible.sync="newModal" :loading = "loading" v-model="newModal" width="600" title="新建" @on-ok="newOk('menuNew')" @on-cancel="cancel()">
-            <Form ref="menuNew" :model="menuNew" :rules="ruleNew" :label-width="80" >
-                <Row>
-                    <Col span="12">
-                        <Form-item label="菜单名称:" prop="name">
-                            <Input v-model="menuNew.name" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                    <Col span="12">
-                        <Form-item label="路径:" prop="url">
-                            <Input v-model="menuNew.url" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span="12">
-                        <Form-item label="父类ID:" prop="parentId">
-                            <Input v-model="menuNew.parentId" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                    <Col span="12">
-                        <Form-item label="排序号:" prop="sort">
-                            <Input v-model="menuNew.sort" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span="12">
-                        <Form-item label="图标:" prop="icon">
-                            <Input v-model="menuNew.icon" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                </Row>
-                <Form-item label="描述:" prop="remark">
-                     <Input v-model="menuNew.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
-                </Form-item>
-            </Form>
-        </Modal>
-        <!--修改modal-->  
-        <Modal :mask-closable="false" :visible.sync="modifyModal" :loading = "loading" v-model="modifyModal" width="600" title="修改" @on-ok="modifyOk('menuModify')" @on-cancel="cancel()">
-            <Form ref="menuModify" :model="menuModify" :rules="ruleModify" :label-width="80" >
-                <Row>
-                    <Col span="12">
-                        <Form-item label="菜单名称:" prop="name">
-                            <Input v-model="menuModify.name" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                    <Col span="12">
-                        <Form-item label="路径:" prop="url">
-                            <Input v-model="menuModify.url" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span="12">
-                        <Form-item label="父类ID:" prop="parentId">
-                            <Input v-model="menuModify.parentId" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                    <Col span="12">
-                        <Form-item label="排序号:" prop="sort">
-                            <Input v-model="menuModify.sort" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span="12">
-                        <Form-item label="图标:" prop="icon">
-                            <Input v-model="menuModify.icon" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                </Row>
-                <Form-item label="描述:" prop="remark">
-                     <Input v-model="menuModify.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
-                </Form-item>
-            </Form>
-        </Modal>
+  <div class="menu-layout">
+
+    <div class="search-block">
+      <el-row :gutter="24">
+        <el-col :span="8">
+          菜单名称：
+          <el-select class="search-select" v-model="menuId" placeholder="请选择" clearable size="small">
+            <el-option v-for="item in menuList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="8">
+          <el-button type="primary" icon="el-icon-search" round size="small" @click="search">搜索</el-button>
+        </el-col>
+      </el-row>
     </div>
+
+    <div class="action-block">
+      <el-button type="primary" icon="el-icon-plus" size="small" @click="openNewModal">新建</el-button>
+      <el-button type="success" icon="el-icon-edit" size="small" @click="openModifyModal">修改</el-button>
+      <el-button type="danger" icon="el-icon-delete" size="small" @click="del">删除</el-button>
+    </div>
+
+    <el-table class="table-block" :data="data1" border @selection-change="change" @row-dblclick="dblclick">
+      <el-table-column type="selection" width="55" align="center"></el-table-column>
+      <el-table-column prop="id" label="菜单ID"></el-table-column>
+      <el-table-column prop="name" label="菜单名称"></el-table-column>
+      <el-table-column prop="url" label="地址"></el-table-column>
+      <el-table-column prop="parentId" label="上级菜单id"></el-table-column>
+      <el-table-column prop="sort" label="排序"></el-table-column>
+      <el-table-column prop="icon" label="图标"></el-table-column>
+    </el-table>
+
+    <el-pagination
+      class="pagination-block"
+      background
+      layout="total, prev, pager, next"
+      :total="total"
+      :page-size="pageInfo.pageSize"
+      @current-change="e=>{pageSearch(e)}">
+    </el-pagination>
+
+                 
+       
+    <!--添加modal-->
+    <el-dialog
+      title="新建"
+      :visible.sync="newModal"
+      width="600px"
+      :close-on-click-modal="false">
+      <span>
+        <el-form :model="menuNew" :rules="ruleNew" ref="menuNew" label-width="90px" size="small">
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="菜单名称:" prop="name">
+                <el-input v-model="menuNew.name"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="路径:" prop="url">
+                  <el-input v-model="menuNew.url"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="父类ID:" prop="parentId">
+                <el-input v-model="menuNew.parentId"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="排序号:" prop="sort">
+                  <el-input v-model="menuNew.sort"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="图标:" prop="icon">
+                <el-input v-model="menuNew.icon"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="描述:" prop="remark">
+                  <el-input v-model="menuNew.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </span>
+      <span slot="footer">
+        <el-button @click="newModal = false">取 消</el-button>
+        <el-button type="primary" @click="newOk('menuNew')">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!--修改modal-->
+    <el-dialog title="修改" :visible.sync="modifyModal" width="600px" :close-on-click-modal="false">
+      <span>
+        <el-form :model="menuModify" :rules="ruleModify" ref="menuModify" label-width="90px" size="small">
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="菜单名称:" prop="name">
+                <el-input v-model="menuModify.name"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="路径:" prop="url">
+                  <el-input v-model="menuModify.url"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="父类ID:" prop="parentId">
+                <el-input v-model="menuModify.parentId"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="排序号:" prop="sort">
+                  <el-input v-model="menuModify.sort"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="图标:" prop="icon">
+                <el-input v-model="menuModify.icon"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="描述:" prop="remark">
+                  <el-input v-model="menuModify.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </span>
+      <span slot="footer">
+        <el-button @click="modifyModal = false">取 消</el-button>
+        <el-button type="primary" @click="modifyOk('menuModify')">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 <script>
 export default {
@@ -275,38 +303,6 @@ export default {
       },
       /*菜单列表*/
       menuList: [],
-      /*生产类型表显示字段*/
-      columns1: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "菜单ID",
-          key: "id"
-        },
-        {
-          title: "菜单名称",
-          key: "name"
-        },
-        {
-          title: "地址",
-          key: "url"
-        },
-        {
-          title: "上级菜单id",
-          key: "parentId"
-        },
-        {
-          title: "排序",
-          key: "sort"
-        },
-        {
-          title: "图标",
-          key: "icon"
-        }
-      ],
       /*生产类型表数据*/
       data1: []
     };
@@ -468,7 +464,7 @@ export default {
                   pageInfo: this.pageInfo,
                   menuId: this.menuId
                 });
-                this.$Message.info("新建成功");
+                this.$message.info("新建成功");
               }.bind(this)
             )
             .catch(function(error) {
@@ -489,7 +485,7 @@ export default {
     openModifyModal() {
       if (this.count > 1 || this.count < 1) {
         this.modifyModal = false;
-        this.$Message.warning("请至少选择一项(且只能选择一项)");
+        this.$message.warning("请至少选择一项(且只能选择一项)");
       } else {
         this.modifyModal = true;
       }
@@ -512,7 +508,7 @@ export default {
                   pageInfo: this.pageInfo,
                   menuId: this.menuId
                 });
-                this.$Message.info("修改成功");
+                this.$message.info("修改成功");
               }.bind(this)
             )
             .catch(function(error) {
@@ -520,7 +516,7 @@ export default {
             });
           this.modifyModal = false;
         } else {
-          this.$Message.error("表单验证失败!");
+          this.$message.error("表单验证失败!");
           setTimeout(() => {
             this.loading = false;
             this.$nextTick(() => {
@@ -532,7 +528,7 @@ export default {
     },
     /*modal的cancel点击事件*/
     cancel() {
-      this.$Message.info("点击了取消");
+      this.$message.info("点击了取消");
     },
     /*table选择后触发事件*/
     change(e) {
@@ -565,7 +561,7 @@ export default {
               });
               this.groupId = null;
               this.count = 0;
-              this.$Message.info("删除成功");
+              this.$message.info("删除成功");
             }.bind(this)
           )
           .catch(function(error) {
@@ -582,3 +578,27 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.menu-layout {
+  background-color: #fff;
+  padding: 20px;
+
+  .search-block {
+    margin-bottom: 20px;
+
+    .search-select {
+      width: 200px;
+    }
+  }
+
+  .action-block {
+    margin-bottom: 10px;
+  }
+  .table-block {
+    margin-bottom: 10px;
+  }
+  .pagination-block {
+    text-align: right;
+  }
+}
+</style>
