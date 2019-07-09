@@ -5,7 +5,7 @@
       <el-row :gutter="24">
         <el-col :span="8">
           用户名：
-          <el-input class="search-input" v-model="name" placeholder="请输入..."></el-input>
+          <el-input class="search-input" v-model="name" placeholder="请输入..." size="small"></el-input>
         </el-col>
         <el-col :span="8">
           <el-button type="primary" icon="el-icon-search" round size="small" @click="search">搜索</el-button>
