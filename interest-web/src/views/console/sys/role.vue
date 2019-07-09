@@ -1,80 +1,124 @@
-<style scoped>
-  .operation-button{
-    margin-right: 3px;
-  }
-</style>
 <template>
-    <div style="margin: 20px;">
-        <div>
-            <ul>
-                <li>
-                    <Button class="operation-button" type="primary" icon="md-add" @click="openNewModal()">新建</Button>
-                    <Button class="operation-button" type="success" icon="md-build" @click="openModifyModal()">修改</Button>
-                    <Button type="error" icon="md-trash" @click="del()">删除</Button>
-                </li>
-                <li>
-                    <div style="padding: 10px 0;">
-                        <Table border :columns="columns1" :data="data1" :height="400" @on-selection-change="s=>{change(s)}" @on-row-dblclick="s=>{dblclick(s)}"></Table>
-                    </div> 
-                </li>
-                <li>
-                    <div style="text-align: right;">
-                        <Page :total="total" :page-size="pageInfo.pageSize" show-elevator show-total @on-change="e=>{pageSearch(e)}"></Page>
-                    </div>  
-                </li>
-            </ul>
-        </div>
-        <!--添加modal-->  
-        <Modal :mask-closable="false" :visible.sync="newModal" :loading = "loading" v-model="newModal" width="600" title="新建" @on-ok="newOk('roleNew')" @on-cancel="cancel()">
-            <Form ref="roleNew" :model="roleNew" :rules="ruleNew" :label-width="80" >
-                <Row>
-                    <Col span="12">
-                      <Form-item label="角色:" prop="role">
-                          <Input v-model="roleNew.role" style="width: 204px"/>
-                      </Form-item>
-                    </Col>
-                    <Col span="12">
-                         <Form-item label="角色名:" prop="name">
-                            <Input v-model="roleNew.name" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                </Row>
-               
-                <Form-item label="描述:" prop="describe">
-                     <Input v-model="roleNew.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
-                </Form-item>
-            </Form>
-        </Modal>
-        <!--修改modal-->  
-        <Modal :mask-closable="false" :visible.sync="modifyModal" :loading = "loading" v-model="modifyModal" width="600" title="修改" @on-ok="modifyOk('roleModify')" @on-cancel="cancel()">
-            <Form ref="roleModify" :model="roleModify" :rules="ruleModify" :label-width="80" >
-                <Row>
-                    <Col span="12">
-                        <Form-item label="角色:" prop="role">
-                            <Input v-model="roleModify.role" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                    <Col span="12">
-                         <Form-item label="角色名:" prop="name">
-                            <Input v-model="roleModify.name" style="width: 204px"/>
-                        </Form-item>
-                    </Col>
-                </Row>
-                <!-- <Form-item label="角色名:" prop="name">
-                            <Input v-model="roleModify.name" style="width: 204px"/>
-                        </Form-item> -->
-                <Form-item label="描述:" prop="describe">
-                     <Input v-model="roleModify.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
-                </Form-item>
-            </Form>
-        </Modal>
-        <!-- 配置权限 -->
-        <Modal v-model="settingModal"  width="400" title="配置权限" @on-ok="settingOk()" @on-cancel="cancel()" :mask-closable="false">
-            <Row>
-                <Col span="24"><Table border :columns="columns2" :data="data2"></Table></Col>
-            </Row>
-        </Modal>
+  <div class="role-layout">
+
+    <div class="action-block">
+      <el-button type="primary" icon="el-icon-plus" size="small" @click="openNewModal">新建</el-button>
+      <el-button type="success" icon="el-icon-edit" size="small" @click="openModifyModal">修改</el-button>
+      <el-button type="danger" icon="el-icon-delete" size="small" @click="del">删除</el-button>
     </div>
+
+    <el-table class="table-block" :data="data1" border @selection-change="change" @row-dblclick="dblclick" height="336px">
+      <el-table-column type="selection" width="55" align="center"></el-table-column>
+      <el-table-column prop="role" label="角色"></el-table-column>
+      <el-table-column prop="name" label="角色名"></el-table-column>
+      <el-table-column prop="describe" label="描述"></el-table-column>
+      <el-table-column label="配置" width="180" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-setting" circle @click="setting(scope.row)" size="small"></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-pagination
+      class="pagination-block"
+      background
+      layout="total, prev, pager, next"
+      :total="total"
+      :page-size="pageInfo.pageSize"
+      @current-change="e=>{pageSearch(e)}">
+    </el-pagination>
+
+    <!--添加modal-->  
+    <el-dialog
+      title="新建"
+      :visible.sync="newModal"
+      width="600px"
+      :close-on-click-modal="false">
+      <span>
+        <el-form ref="roleNew" :model="roleNew" :rules="ruleNew" label-width="80px" size="small">
+          <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item label="角色:" prop="role">
+                    <el-input v-model="roleNew.role"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                   <el-form-item label="角色名:" prop="name">
+                      <el-input v-model="roleNew.name"/>
+                  </el-form-item>
+              </el-col>
+          </el-row>
+          <el-form-item label="描述:" prop="describe">
+               <el-input v-model="roleNew.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></el-input>
+          </el-form-item>
+        </el-form>
+      </span>
+      <span slot="footer">
+        <el-button @click="newModal = false">取 消</el-button>
+        <el-button type="primary" @click="newOk('roleNew')">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!--修改modal-->  
+    <el-dialog
+      title="修改"
+      :visible.sync="modifyModal"
+      width="600px"
+      :close-on-click-modal="false">
+      <span>
+        <el-form ref="roleModify" :model="roleModify" :rules="ruleModify" label-width="80px" size="small">
+          <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item label="角色:" prop="role">
+                    <el-input v-model="roleModify.role"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                   <el-form-item label="角色名:" prop="name">
+                      <el-input v-model="roleModify.name"/>
+                  </el-form-item>
+              </el-col>
+          </el-row>
+          <el-form-item label="描述:" prop="describe">
+               <el-input v-model="roleModify.describe" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></el-input>
+          </el-form-item>
+        </el-form>
+      </span>
+      <span slot="footer">
+        <el-button @click="modifyModal = false">取 消</el-button>
+        <el-button type="primary" @click="modifyOk('roleModify')">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 配置权限 -->
+    <el-dialog
+      title="配置权限"
+      :visible.sync="settingModal"
+      width="400px"
+      :close-on-click-modal="false">
+      <span>
+        <el-table :data="data2" border>
+          <el-table-column prop="name" label="权限"></el-table-column>
+          <el-table-column label="操作" align="center">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.value"
+                @change="e => {switchChange(e,scope.row)}">
+              </el-switch>
+            </template>
+          </el-table-column>
+        </el-table>
+      </span>
+      <span slot="footer">
+        <el-button @click="settingModal = false">取 消</el-button>
+        <el-button type="primary" @click="settingOk">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- <Modal v-model="settingModal"  width="400" title="配置权限" @on-ok="settingOk()" @on-cancel="cancel()" :mask-closable="false">
+
+        <Row>
+            <Col span="24"><Table border :columns="columns2" :data="data2"></Table></Col>
+        </Row>
+    </Modal> -->
+  </div>
 </template>
 <script>
 export default {
@@ -161,81 +205,8 @@ export default {
           }
         ]
       },
-      /*表显示字段*/
-      columns1: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "角色",
-          key: "role"
-        },
-        {
-          title: "角色名",
-          key: "name"
-        },
-        {
-          title: "描述",
-          key: "describe"
-        },
-        {
-          title: "操作",
-          key: "action",
-          width: 180,
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h("Button", {
-                props: { icon: "md-cog" },
-                style: { border: "none", background: "none" },
-                on: {
-                  click: () => {
-                    this.setting(params.row);
-                  }
-                }
-              })
-            ]);
-          }
-        }
-      ],
       /*表数据*/
       data1: [],
-      /*表显示字段*/
-      columns2: [
-        {
-          title: "权限",
-          key: "name"
-        },
-        {
-          title: "操作",
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h("i-switch", {
-                attrs: {
-                  value: params.row.value
-                },
-                on: {
-                  "on-change": val => {
-                    var i = this.moduleArr.indexOf(params.row.id + "");
-                    if (val) {
-                      if (i == -1) {
-                        this.moduleArr.push(params.row.id + "");
-                      }
-                    } else {
-                      if (i != -1) {
-                        this.moduleArr.splice(i, 1);
-                      }
-                    }
-                  }
-                }
-              })
-            ]);
-          }
-        }
-      ],
       /*表数据*/
       data2: [],
       /*临时存储权限的数组*/
@@ -263,6 +234,18 @@ export default {
       });
   },
   methods: {
+    switchChange(val,row){
+      let i = this.moduleArr.indexOf(row.id + "");
+      if (val) {
+        if (i == -1) {
+          this.moduleArr.push(row.id + "");
+        }
+      } else {
+        if (i != -1) {
+          this.moduleArr.splice(i, 1);
+        }
+      }
+    },
     /*pageInfo实体初始化*/
     initPageInfo() {
       this.pageInfo.page = 0;
@@ -368,7 +351,7 @@ export default {
                 this.getTable({
                   pageInfo: this.pageInfo
                 });
-                this.$Message.info("新建成功");
+                this.$message.info("新建成功");
               }.bind(this)
             )
             .catch(function(error) {
@@ -389,7 +372,7 @@ export default {
     openModifyModal() {
       if (this.count > 1 || this.count < 1) {
         this.modifyModal = false;
-        this.$Message.warning("请至少选择一项(且只能选择一项)");
+        this.$message.warning("请至少选择一项(且只能选择一项)");
       } else {
         this.modifyModal = true;
       }
@@ -411,7 +394,7 @@ export default {
                 this.getTable({
                   pageInfo: this.pageInfo
                 });
-                this.$Message.info("修改成功");
+                this.$message.info("修改成功");
               }.bind(this)
             )
             .catch(function(error) {
@@ -419,7 +402,7 @@ export default {
             });
           this.modifyModal = false;
         } else {
-          this.$Message.error("表单验证失败!");
+          this.$message.error("表单验证失败!");
           setTimeout(() => {
             this.loading = false;
             this.$nextTick(() => {
@@ -475,11 +458,12 @@ export default {
       })
         .then(
           function(response) {
+            this.settingModal = false;
             this.initRoleModify();
             this.getTable({
               pageInfo: this.pageInfo
             });
-            this.$Message.info("配置成功");
+            this.$message.info("配置成功");
           }.bind(this)
         )
         .catch(function(error) {
@@ -488,7 +472,7 @@ export default {
     },
     /*modal的cancel点击事件*/
     cancel() {
-      this.$Message.info("点击了取消");
+      this.$message.info("点击了取消");
     },
     /*table选择后触发事件*/
     change(e) {
@@ -520,7 +504,7 @@ export default {
               });
               this.groupId = null;
               this.count = 0;
-              this.$Message.info("删除成功");
+              this.$message.info("删除成功");
             }.bind(this)
           )
           .catch(function(error) {
@@ -537,3 +521,19 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.role-layout {
+  background-color: #fff;
+  padding: 20px;
+
+  .action-block {
+    margin-bottom: 10px;
+  }
+  .table-block {
+    margin-bottom: 10px;
+  }
+  .pagination-block {
+    text-align: right;
+  }
+}
+</style>
