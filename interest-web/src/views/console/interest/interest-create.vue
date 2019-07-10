@@ -1,64 +1,52 @@
-<style type="text/css">
-.editor {
-  width: 90%;
-}
-.editor .ql-container {
-  height: 30rem;
-}
-</style>
 <template>
-	<div style="margin: 20px;">
-        <Form ref="entity" :model="entity" :rules="ruleNew" :label-width="80" >
-            <Form-item label="标题：" prop="title">
-                <Input v-model="entity.title" style="width: 204px"/>
-            </Form-item>
-            <Form-item label="简介：" prop="info">
-                <Input v-model="entity.info" type="textarea" :autosize="{minRows: 4,maxRows: 5}"style="width: 50%" />
-            </Form-item>
-            <Form-item label="图片：" prop="image">
-                <Upload 
-                    ref="upload"
-                    :headers="headers"
-                    action="/interest/admin/interest/upload/picture"
-                    name="picture"
-                    :show-upload-list="false"
-                    :before-upload="handleBeforeUpload"
-                    :on-success="handleSuccess"
-                    :on-format-error="handleFormatError"
-                    :format="['jpg','jpeg','png']">
-                    <Button icon="ios-cloud-upload-outline">上传图片</Button>
-                </Upload>
-            </Form-item>
-            <Form-item>
-                <img v-if="entity.image != null" :src="entity.image" style="width: 300px;height: 200px">
-            </Form-item>
-            <Form-item label="详情：" prop="content">
-                <!-- <quill-editor class="editor"
-                  v-model="content" 
-                  ref="myQuillEditor" 
-                  :options="editorOption" 
-                  @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
-                  @change="onEditorChange($event)">
-                </quill-editor> -->
-                <interest-quill-editor class="editor" v-bind:interestContent="interestContent" @editor-change="e=>{contentGet(e)}"></interest-quill-editor>
-            </Form-item>
-            <FormItem>
-                <Button type="primary" @click="submit('entity')">提交</Button>
-                <Button @click="reset()" style="margin-left: 8px">重置</Button>
-            </FormItem>
-        </Form>
-    </div>
+  <div class="interest-layout">
+    <el-form ref="entity" :model="entity" :rules="ruleNew" :label-width="80" label-position="top">
+        <el-form-item label="标题：" prop="title">
+            <el-input class="title" v-model="entity.title"/>
+        </el-form-item>
+        <el-form-item label="简介：" prop="info">
+            <el-input class="info" v-model="entity.info" type="textarea" :autosize="{minRows: 4,maxRows: 5}"/>
+        </el-form-item>
+        <el-form-item label="图片：" prop="image">
+          <el-upload
+            ref="upload"
+            :headers="headers"
+            name="picture"
+            action="/interest/admin/interest/upload/picture"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+            :on-success="handleSuccess"
+            :before-upload="handleBeforeUpload"
+            :on-error="handleError"
+            :limit="1"
+            :on-exceed="handExceed">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="详情：" prop="content">
+          <i-quill-editor class="editor" v-model="entity.content"></i-quill-editor>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="submit('entity')" size="small">提交</el-button>
+            <el-button @click="reset" size="small">重置</el-button>
+        </el-form-item>
+    </el-form>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
+  </div>
 </template>
 <script>
-import InterestQuillEditor from "./interest-quill-editor";
+import iQuillEditor from "@components/i-quill-editor.vue";
 export default {
   components: {
-    "interest-quill-editor": InterestQuillEditor
+    "i-quill-editor": iQuillEditor
   },
   data() {
     return {
-      interestContent: "",
-      content: null,
+      dialogImageUrl: '',
+      dialogVisible: false,
       headers: {
         Authorization: "bearer " + localStorage.getItem("currentUser_token")
       },
@@ -106,12 +94,38 @@ export default {
       }
     };
   },
-  mounted() {
-    // console.log(this.$refs.myQuillEditor);
-    /*页面初始化调用方法*/
-    //this.getTable();
-  },
   methods: {
+    handExceed(){
+      this.$message.warning("超过上传数量");
+    },
+    handleError () {
+      this.$message.error("图片上传失败");
+    },
+    handleBeforeUpload (file) {
+      let formatVerify = file.type === 'image/jpeg' || file.type === 'image/png';
+      let sizeVerify = file.size < 1024 * 1024;
+
+      if (!formatVerify) {
+        this.$notify.warning({
+            title: '图片格式不对',
+            message: '图片格式只能为jpeg,png'
+        });
+      }
+      if (!sizeVerify) {
+        this.$notify.warning({
+            title: '图片太大',
+            message: '上传图片最大为1M,请优化后在上传。可使用https://zhitu.isux.us/网站优化'
+        });
+      }
+      return formatVerify && sizeVerify;
+    },
+    handleRemove(file, fileList) {
+      this.$refs.upload.clearFiles();
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
     /*entity实体初始化*/
     initEntity() {
       this.entity.title = null;
@@ -119,49 +133,15 @@ export default {
       this.entity.image = null;
       this.entity.content = null;
     },
-    /*entityNew设置*/
-    entitySet(e) {
-      this.entity.title = e.title;
-      this.entity.info = e.info;
-      this.entity.image = e.image;
-      this.entity.content = e.content;
-    },
-    dateGet(e) {
-      var time = new Date(parseInt(e));
-      return (
-        time.getFullYear() +
-        "-" +
-        (time.getMonth() + 1) +
-        "-" +
-        time.getDate() +
-        " " +
-        time.getHours() +
-        ":" +
-        time.getMinutes()
-      );
-    },
-    listDateSet(e) {
-      for (var i = e.length - 1; i >= 0; i--) {
-        e[i].time = this.dateGet(e[i].time);
-      }
-    },
     handleSuccess(res, file) {
+      console.log(res,file);
       this.entity.image = res.data.url;
-      file.url = res.data.url;
-      file.name = res.data.url;
-    },
-    handleBeforeUpload() {
-      this.$refs.upload.fileList.splice(0, this.$refs.upload.fileList.length);
-      return true;
     },
     handleFormatError(file) {
       this.$Notice.warning({
         title: "图片格式不对",
         desc: "图片格式只能为jpg,jpeg,png"
       });
-    },
-    contentGet(e) {
-      this.entity.content = e;
     },
     submit(entity) {
       this.$refs[entity].validate(valid => {
@@ -173,23 +153,45 @@ export default {
           })
             .then(
               function(response) {
-                this.interestContent = this.interestContent + ".";
                 this.initEntity();
-                this.$Message.info("新建成功");
+                this.$message.info("新建成功");
+                this.$refs.upload.clearFiles();
               }.bind(this)
             )
             .catch(
               function(error) {
-                this.$Message.error("新建失败");
+                this.$message.error("新建失败");
               }.bind(this)
             );
         }
       });
     },
     reset() {
-      this.interestContent = this.interestContent + ".";
+      this.$refs.upload.clearFiles();
       this.initEntity();
     }
   }
 };
 </script>
+<style lang="scss" scoped>
+.interest-layout {
+  background-color: #fff;
+  padding: 20px;
+
+  .title {
+    width: 204px;
+  }
+  .info {
+    width: 50%;
+  }
+}
+</style>
+<style lang="scss">
+.editor {
+  .ql-container {
+    .ql-editor{
+        min-height: 30rem;
+      }
+  } 
+}
+</style>
