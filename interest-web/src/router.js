@@ -13,7 +13,7 @@ const routers = [
     component: resolve => require(["./views/console/base.vue"], resolve),
     children: [
       {
-        path: "role",
+        path: "",
         name: "welcome",
         component: resolve => require(["./views/test.vue"], resolve),
         meta: {
@@ -299,7 +299,7 @@ const routers = [
       {
         path: "banner",
         name: "banner",
-        component: resolve => require(["./views/console/banner.vue"], resolve),
+        component: resolve => require(["./views/console/banner/banner.vue"], resolve),
         meta: {
           title: "banner"
         }
