@@ -256,7 +256,7 @@ const routers = [
       {
         path: "email",
         name: "email",
-        component: resolve => require(["./views/console/email.vue"], resolve),
+        component: resolve => require(["./views/console/email/email.vue"], resolve),
         meta: {
           title: "email"
         }
