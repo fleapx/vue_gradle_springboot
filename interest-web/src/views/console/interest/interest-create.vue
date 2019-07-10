@@ -1,36 +1,36 @@
 <template>
   <div class="interest-layout">
     <el-form ref="entity" :model="entity" :rules="ruleNew" :label-width="80" label-position="top">
-        <el-form-item label="标题：" prop="title">
-            <el-input class="title" v-model="entity.title"/>
-        </el-form-item>
-        <el-form-item label="简介：" prop="info">
-            <el-input class="info" v-model="entity.info" type="textarea" :autosize="{minRows: 4,maxRows: 5}"/>
-        </el-form-item>
-        <el-form-item label="图片：" prop="image">
-          <el-upload
-            ref="upload"
-            :headers="headers"
-            name="picture"
-            action="/interest/admin/interest/upload/picture"
-            list-type="picture-card"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
-            :on-success="handleSuccess"
-            :before-upload="handleBeforeUpload"
-            :on-error="handleError"
-            :limit="1"
-            :on-exceed="handExceed">
-            <i class="el-icon-plus"></i>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="详情：" prop="content">
-          <i-quill-editor class="editor" v-model="entity.content"></i-quill-editor>
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="submit('entity')" size="small">提交</el-button>
-            <el-button @click="reset" size="small">重置</el-button>
-        </el-form-item>
+      <el-form-item label="标题：" prop="title">
+          <el-input class="title" v-model="entity.title"/>
+      </el-form-item>
+      <el-form-item label="简介：" prop="info">
+          <el-input class="info" v-model="entity.info" type="textarea" :autosize="{minRows: 4,maxRows: 5}"/>
+      </el-form-item>
+      <el-form-item label="图片：" prop="image">
+        <el-upload
+          ref="upload"
+          :headers="headers"
+          name="picture"
+          action="/interest/admin/interest/upload/picture"
+          list-type="picture-card"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
+          :on-success="handleSuccess"
+          :before-upload="handleBeforeUpload"
+          :on-error="handleError"
+          :limit="1"
+          :on-exceed="handExceed">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+      </el-form-item>
+      <el-form-item label="详情：" prop="content">
+        <i-quill-editor class="editor" v-model="entity.content"></i-quill-editor>
+      </el-form-item>
+      <el-form-item>
+          <el-button type="primary" @click="submit('entity')" size="small">提交</el-button>
+          <el-button @click="reset" size="small">重置</el-button>
+      </el-form-item>
     </el-form>
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="">
@@ -134,7 +134,6 @@ export default {
       this.entity.content = null;
     },
     handleSuccess(res, file) {
-      console.log(res,file);
       this.entity.image = res.data.url;
     },
     handleFormatError(file) {
@@ -173,6 +172,19 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.interest-layout {
+  .el-upload-list__item {
+    height: auto;
+    width: 300px;
+
+    img {
+      display: block;
+      height: auto;
+    }
+  }
+}
+</style>
 <style lang="scss" scoped>
 .interest-layout {
   background-color: #fff;
