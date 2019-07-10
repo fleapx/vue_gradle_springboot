@@ -1,48 +1,65 @@
 <template>
-	<div style="margin: 20px;">
-		<div>
-            <Row style="margin-bottom: 25px;">
-                <Col span="8">兴趣：
-                    <Select v-model="interestid" clearable style="width: 200px">
-                        <Option v-for="item in interestList" :value="item.id" :key="item.id">{{ item.title }}</Option>
-                    </Select>
-                </Col>
-                <Col span="8"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
-            </Row>
-        </div>
-        <div>
-            <ul>
-            	<li>
-                    <Button type="error" icon="md-trash" @click="del()">删除</Button>
-                </li>
-                <li>
-                    <div style="padding: 10px 0;">
-                    	<Table border :columns="columns1" :data="data1" :height="400" @on-selection-change="s=>{change(s)}" @on-row-dblclick="s=>{dblclick(s)}"></Table>
-                    </div> 
-                </li>
-                <li>
-                    <div style="text-align: right;">
-                        <Page :total="total" :page-size="pageInfo.pageSize" show-elevator show-total @on-change="e=>{pageSearch(e)}"></Page>
-                    </div>  
-                </li>
-            </ul>
-        </div>
-        <Modal :mask-closable="false" :visible.sync="modal" v-model="modal" width="600" title="查看">
-	        <Form :label-width="80" >
-	        	<Form-item label="登录名:">
-	        		<strong>{{postcard.username}}</strong>
-                    <!-- <Input v-model="email.username" style="width: 204px" disabled="disabled" /> -->
-                </Form-item>
-                <Form-item label="内容:">
-                	<span>{{postcard.content}}</span>
-                    <!-- <Input v-model="email.username" style="width: 204px" disabled="disabled" /> -->
-                </Form-item>
-            </Form>
-	        <div slot="footer">
-	            <Button type="error" size="large"  @click="cancel">关闭</Button>
-	        </div>
-	    </Modal>	
+  <div class="card-layout">
+
+    <div class="search-block">
+      <el-row :gutter="24">
+        <el-col :span="8">
+          兴趣：
+          <el-select class="search-select" v-model="interestid" placeholder="请选择" clearable size="small">
+            <el-option v-for="item in interestList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="8">
+          <el-button type="primary" icon="el-icon-search" round size="small" @click="search">搜索</el-button>
+        </el-col>
+      </el-row>
     </div>
+
+    <el-divider></el-divider>
+
+    <div class="action-block">
+      <el-button type="danger" icon="el-icon-delete" size="small" @click="del">删除</el-button>
+    </div>
+
+    <el-table class="table-block" :data="data1" border @selection-change="change" @row-dblclick="dblclick">
+      <el-table-column type="selection" width="55" align="center"></el-table-column>
+      <el-table-column prop="username" label="登录名"></el-table-column>
+      <el-table-column prop="interestName" label="所在兴趣"></el-table-column>
+      <el-table-column prop="title" label="标题" width="500"></el-table-column>
+      <el-table-column prop="createtime" label="时间"></el-table-column>
+      <el-table-column label="查看" align="center" width="100">
+        <template slot-scope="scope">
+          <a :href="$store.state.domainName + '/page/card/' + scope.row.id" target="_blank">
+            <el-button type="primary" icon="el-icon-view" circle size="small"></el-button>
+          </a>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-pagination
+      class="pagination-block"
+      background
+      layout="total, prev, pager, next"
+      :total="total"
+      :page-size="pageInfo.pageSize"
+      @current-change="e=>{pageSearch(e)}">
+    </el-pagination>
+
+    <!--查看modal--> 
+    <el-dialog title="查看" :visible.sync="modal" width="600px" :close-on-click-modal="false">
+      <el-form label-width="80px" size="small">
+        <el-form-item label="登录名:">
+          <strong>{{postcard.username}}</strong>
+        </el-form-item>
+        <el-form-item label="内容:">
+          <span>{{postcard.content}}</span>
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button type="primary" @click="modal = false">关 闭</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 <script>
 export default {
@@ -70,80 +87,12 @@ export default {
         createtime: null,
         replytime: null
       },
-      /*表显示字段*/
-      columns1: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "登录名",
-          key: "username"
-        },
-        {
-          title: "兴趣归属",
-          key: "interestid",
-          render: (h, params) => {
-            for (var i = this.interestList.length - 1; i >= 0; i--) {
-              if (params.row.interestid == this.interestList[i].id) {
-                return h("div", [
-                  h("strong", null, this.interestList[i].title)
-                ]);
-              }
-            }
-          }
-        },
-        {
-          title: "标题",
-          width: 500,
-          key: "title"
-        },
-        {
-          title: "时间",
-          key: "createtime"
-        },
-        {
-          title: "操作",
-          align: "center",
-          key: "action",
-          render: (h, params) => {
-            return h(
-              "a",
-              {
-                attrs: {
-                  href:
-                    this.$store.state.domainName +
-                    "/page/card/" +
-                    params.row.id,
-                  target: "_blank"
-                }
-              },
-              [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "info"
-                    }
-                  },
-                  "查看"
-                )
-              ]
-            );
-          }
-        }
-      ],
       /*表数据*/
       data1: []
     };
   },
   mounted() {
     /*页面初始化调用方法*/
-    this.getTable({
-      pageInfo: this.pageInfo,
-      interestid: this.interestid
-    });
     this.axios({
       method: "get",
       url: "/public/interests"
@@ -151,6 +100,10 @@ export default {
       .then(
         function(response) {
           this.interestList = response.data.data;
+          this.getTable({
+            pageInfo: this.pageInfo,
+            interestid: this.interestid
+          });
         }.bind(this)
       )
       .catch(
@@ -207,6 +160,13 @@ export default {
         .then(
           function(response) {
             this.data1 = response.data.data.data;
+            this.data1.forEach(e => {
+              this.interestList.forEach(interest => {
+                if (e.interestid == interest.id) {
+                  e.interestName = interest.title;
+                }
+              });
+            });
             this.listDateSet(this.data1);
             this.total = response.data.data.totalCount;
           }.bind(this)
@@ -258,7 +218,7 @@ export default {
                 interestid: this.interestid
               });
               this.groupId = [];
-              this.$Message.info("删除成功");
+              this.$message.info("删除成功");
             }.bind(this)
           )
           .catch(function(error) {
@@ -278,3 +238,27 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.card-layout {
+  background-color: #fff;
+  padding: 20px;
+
+  .search-block {
+    
+
+    .search-select {
+      width: 200px;
+    }
+  }
+
+  .action-block {
+    margin-bottom: 10px;
+  }
+  .table-block {
+    margin-bottom: 10px;
+  }
+  .pagination-block {
+    text-align: right;
+  }
+}
+</style>

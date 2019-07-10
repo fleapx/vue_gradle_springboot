@@ -264,7 +264,7 @@ const routers = [
       {
         path: "card",
         name: "cardmanage",
-        component: resolve => require(["./views/console/card.vue"], resolve),
+        component: resolve => require(["./views/console/postcard/card.vue"], resolve),
         meta: {
           title: "card"
         }
@@ -307,7 +307,7 @@ const routers = [
       {
         path: "article",
         name: "article",
-        component: resolve => require(["./views/console/article.vue"], resolve),
+        component: resolve => require(["./views/console/article/article.vue"], resolve),
         meta: {
           title: "article"
         }
