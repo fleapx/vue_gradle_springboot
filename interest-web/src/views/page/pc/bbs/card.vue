@@ -68,7 +68,7 @@
         <el-input v-model="textarea" type="textarea" rows="6" placeholder="内容"></el-input>
       </div>
       <div class="send-button">
-        <Button type="primary" @click="sendCard()">发送</Button>
+        <el-button type="primary" @click="sendCard()">发送</el-button>
       </div>
     </div>
 

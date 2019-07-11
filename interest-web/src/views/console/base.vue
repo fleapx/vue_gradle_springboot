@@ -14,11 +14,11 @@
             active-text-color="#ffd04b">
             <el-submenu v-for="pmenu in menuList" :index="pmenu.id" :key="pmenu.id">
               <template slot="title">
-                <Icon :type="pmenu.icon"></Icon>
+                <i :class="pmenu.icon"></i>
                 {{pmenu.name}}
               </template>
               <el-menu-item v-for="cmenu in pmenu.children" :index="cmenu.url" :key="cmenu.id" @click="menuClick(cmenu)">
-                <Icon :type="cmenu.icon"></Icon>
+                <i :class="cmenu.icon"></i>
                 {{cmenu.name}}
               </el-menu-item>
             </el-submenu>

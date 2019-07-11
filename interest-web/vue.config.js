@@ -18,11 +18,12 @@ module.exports = {
   configureWebpack: {
     externals: {
         'vue': 'Vue',
-        'iview':'iview',
+        // 'iview':'iview',
         'quill':'Quill',
         'vue-router': 'VueRouter',
         'vuex':'Vuex',
-        'axios': 'axios'
+        'axios': 'axios',
+        'element-ui': 'ELEMENT'
     },
     plugins: [
       new webpack.ProvidePlugin({

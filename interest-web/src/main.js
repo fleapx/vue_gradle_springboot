@@ -9,9 +9,9 @@ import store from "./store/store";
 import VueQuillEditor from "vue-quill-editor";
 
 import Element from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+// import 'element-ui/lib/theme-chalk/index.css';
 
-import iView from "iview";
+// import iView from "iview";
 
 // import "iview/dist/styles/iview.css";
 // import "quill/dist/quill.core.css";
@@ -22,7 +22,7 @@ import base from "./base";
 Vue.use(base);
 
 Vue.use(Element);
-Vue.use(iView);
+// Vue.use(iView);
 Vue.use(VueAxios, axios);
 
 Vue.use(VueQuillEditor);

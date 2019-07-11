@@ -6,5 +6,6 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <include file="classpath:database/changelog/2019-06-23-smallsnail-wh.sql"/>
+    <include file="classpath:database/changelog/2019-07-11-smallsnail-wh.sql"/>
 
 </databaseChangeLog>

@@ -360,6 +360,16 @@ export default {
 .list-user-other .num {
     color: #3399ea;
 }
+.list-user-other a {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    color: #57a3f3;
+  }
+}
 
 .content {
     overflow: hidden;
