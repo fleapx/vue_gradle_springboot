@@ -14,13 +14,13 @@ export default new Vuex.Store({
     ],
     /*域名*/
     // 测试
-    domainName: 'http://127.0.0.1:8071',
-    userUrlPre: "http://127.0.0.1:8071/page/user/",
-    userMobileUrlPre: "http://127.0.0.1:8071/mobile/user/",
+    // domainName: 'http://127.0.0.1:8071',
+    // userUrlPre: "http://127.0.0.1:8071/page/user/",
+    // userMobileUrlPre: "http://127.0.0.1:8071/mobile/user/",
     //生产
-    // domainName: "https://www.lovemtt.com",
-    // userUrlPre: "https://www.lovemtt.com/page/user/",
-    // userMobileUrlPre: "https://www.lovemtt.com/mobile/user/",
+    domainName: "https://www.lovemtt.com",
+    userUrlPre: "https://www.lovemtt.com/page/user/",
+    userMobileUrlPre: "https://www.lovemtt.com/mobile/user/",
     count: 0,
     /*登录界面判断是否显示错误提示*/
     ifSign: false
