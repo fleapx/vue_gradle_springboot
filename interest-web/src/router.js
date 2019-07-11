@@ -369,7 +369,6 @@ router.beforeEach((to, from, next) => {
     /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
   );
 
-  console.log(to);
   if(to.path == '/qq' && isMobile){
     next({
       path: '/mobile',

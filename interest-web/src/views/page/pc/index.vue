@@ -299,8 +299,10 @@ export default {
             );
             this.axios.defaults.headers.common["Authorization"] =
               "bearer " + localStorage.getItem("currentUser_token");
+            this.userGet();
             this.$router.push({ path: "/" });
-            location.reload();
+            // this.$router.push({ path: "/" });
+            // location.reload();
           }.bind(this)
         )
         .catch(
@@ -339,9 +341,11 @@ export default {
             );
             this.axios.defaults.headers.common["Authorization"] =
               "bearer " + localStorage.getItem("currentUser_token");
-            this.$router.push({ path: "/qq" });
+            this.userGet();
             this.$router.push({ path: "/" });
-            location.reload();
+            // this.$router.push({ path: "/qq" });
+            // this.$router.push({ path: "/" });
+            // location.reload();
           }.bind(this)
         )
         .catch(
