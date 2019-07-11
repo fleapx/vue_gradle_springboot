@@ -176,7 +176,7 @@ export default {
       }
     };
   },
-  mounted() {
+  created() {
     var code = this.$route.query.code;
     var state = this.$route.query.state;
     this.login(code, state);
@@ -321,29 +321,16 @@ export default {
     /*登录*/
     login(code, state) {
       if (code != null && code != "" && state != null && state != "") {
-        this.$Spin.show({
-          render: h => {
-            return h("div", [
-              h("Icon", {
-                style: {
-                  animation: "ani-demo-spin 1s linear infinite"
-                },
-                props: {
-                  type: "load-c",
-                  size: 18
-                }
-              }),
-              h("div", "正在登录，请等待...")
-            ]);
-          }
+        const loading = this.$loading({
+          lock: true,
+          text: '正在登陆...',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
         });
-        setTimeout(() => {
-          this.$Spin.hide();
-        }, 10000);
         if (state == "github") {
-          this.githubLogin(code);
+          this.githubLogin(code,loading);
         } else if (state == "qq") {
-          this.qqLogin(code);
+          this.qqLogin(code,loading);
         } else {
           this.$router.push({ path: "/" });
           location.reload();
@@ -353,7 +340,7 @@ export default {
       }
     },
     /*github登录*/
-    githubLogin(code) {
+    githubLogin(code,loading) {
       this.axios({
         method: "post",
         url: "/authentication/github",
@@ -367,6 +354,7 @@ export default {
       })
         .then(
           function(response) {
+            loading.close();
             localStorage.setItem(
               "currentUser_token",
               response.data.access_token
@@ -388,7 +376,7 @@ export default {
         );
     },
     /*qq登录*/
-    qqLogin(code) {
+    qqLogin(code,loading) {
       this.axios({
         method: "post",
         url: "/authentication/qq",
@@ -402,6 +390,7 @@ export default {
       })
         .then(
           function(response) {
+            loading.close();
             localStorage.setItem(
               "currentUser_token",
               response.data.access_token

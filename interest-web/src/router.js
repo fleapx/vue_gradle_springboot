@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import iView from "iview";
 
 Vue.use(VueRouter);
 
@@ -365,22 +364,36 @@ const router = new VueRouter(RouterConfig);
 
 router.beforeEach((to, from, next) => {
   
-    let toMobile = to.fullPath.startsWith('/mobile');
-    let isMobile = navigator.userAgent.match(
-      /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
-    );
-    if(!toMobile && isMobile){
-      next('/mobile');
-    }else if(toMobile && !isMobile){
-      next('/');
-    }
+  let toMobile = to.fullPath.startsWith('/mobile');
+  let isMobile = navigator.userAgent.match(
+    /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+  );
+
+  console.log(to);
+  if(to.path == '/qq' && isMobile){
+    next({
+      path: '/mobile',
+      query: to.query
+    });
+    return;
+  }else if(to.path == '/qq' && !isMobile){
+    next({
+      path: '/',
+      query: to.query
+    });
+    return;
+  }
+
+  if(!toMobile && isMobile){
+    next('/mobile');
+  }else if(toMobile && !isMobile){
+    next('/');
+  }
     
-  iView.LoadingBar.start();
   next();
 });
 
 router.afterEach(() => {
-  iView.LoadingBar.finish();
   window.scrollTo(0, 0);
 });
 

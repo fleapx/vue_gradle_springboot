@@ -264,7 +264,7 @@ export default {
         if (state == "github") {
           this.githubLogin(code,loading);
         } else if (state == "qq") {
-          this.qqLogin(code),loading;
+          this.qqLogin(code,loading);
         } else {
           this.$router.push({ path: "/" });
           location.reload();
