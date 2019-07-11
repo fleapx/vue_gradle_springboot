@@ -6,23 +6,6 @@ Vue.use(VueRouter);
 
 const routers = [
   {
-    path: "/test",
-    meta: {
-      title: "smallsnail-wh"
-    },
-    component: resolve => require(["./views/console/base.vue"], resolve),
-    children: [
-      {
-        path: "",
-        name: "welcome",
-        component: resolve => require(["./views/test.vue"], resolve),
-        meta: {
-          title: "welcome"
-        }
-      }
-    ]
-  },
-  {
     path: "*",
     component: resolve => require(["./views/error404.vue"], resolve)
   },
