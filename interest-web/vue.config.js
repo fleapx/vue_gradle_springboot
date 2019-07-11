@@ -23,7 +23,7 @@ module.exports = {
         'vue-router': 'VueRouter',
         'vuex':'Vuex',
         'axios': 'axios',
-        'element-ui': 'Element'
+        'element-ui': 'ELEMENT'
     },
     plugins: [
       new webpack.ProvidePlugin({
