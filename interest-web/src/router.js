@@ -369,13 +369,14 @@ router.beforeEach((to, from, next) => {
     /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
   );
 
-  if(to.path == '/qq' && isMobile){
+  let isAuth = (to.path == '/qq' || to.path == '/github') ? true : false;
+  if(isAuth && isMobile){
     next({
       path: '/mobile',
       query: to.query
     });
     return;
-  }else if(to.path == '/qq' && !isMobile){
+  }else if(isAuth && !isMobile){
     next({
       path: '/',
       query: to.query
