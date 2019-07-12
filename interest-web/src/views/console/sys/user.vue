@@ -105,7 +105,7 @@
         <el-button type="primary" @click="roleOk">确 定</el-button>
       </span>
     </el-dialog> 
-    <el-dialog :visible.sync="dialogVisible">
+    <el-dialog :visible.sync="dialogVisible" width="300px">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
   </div>
