@@ -25,7 +25,7 @@
       <el-table-column prop="name" label="用户名"></el-table-column>
       <el-table-column label="头像" width="80" align="center">
         <template slot-scope="scope">
-          <img :src="scope.row.headimg" width="30px" height="30px">
+          <img class="head-img" :src="scope.row.headimg" width="30px" height="30px" @click="handleClickHeadImg(scope.row)">
         </template>
       </el-table-column>
       <el-table-column label="url" width="300">
@@ -105,12 +105,17 @@
         <el-button type="primary" @click="roleOk">确 定</el-button>
       </span>
     </el-dialog> 
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
+      dialogImageUrl: '',
+      dialogVisible: false,
       userTypeOptions: [{
         value: 0,
         label: '普通用户'
@@ -273,6 +278,10 @@ export default {
       });
   },
   methods: {
+    handleClickHeadImg(val){
+      this.dialogImageUrl = val.headimg;
+      this.dialogVisible = true;
+    },
     /*pageInfo实体初始化*/
     initPageInfo() {
       this.pageInfo.page = 0;
@@ -587,6 +596,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.head-img {
+  cursor: pointer;
+}
 .user-layout {
   background-color: #fff;
   padding: 20px;
