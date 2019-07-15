@@ -24,7 +24,7 @@ public class LoggerServiceImpl implements LoggerService {
         List<InterestException> interestExceptionList = Objects.requireNonNull(redisTemplate.opsForList().range(InterestLogAspect.INTEREST_LOG_KEY, pageIndex * pageSize, pageIndex * pageSize + pageSize - 1)).stream().map(o -> (InterestException) o).collect(Collectors.toList());
         int totalCount = Objects.requireNonNull(redisTemplate.opsForList().size(InterestLogAspect.INTEREST_LOG_KEY)).intValue();
 
-        return new PageResult<InterestException>(interestExceptionList, totalCount);
+        return new PageResult<>(interestExceptionList, totalCount);
     }
 
 }

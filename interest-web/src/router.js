@@ -293,6 +293,14 @@ const routers = [
         meta: {
           title: "article"
         }
+      },
+      {
+        path: "log",
+        name: "log",
+        component: resolve => require(["./views/console/log/log.vue"], resolve),
+        meta: {
+          title: "log"
+        }
       }
     ]
   },

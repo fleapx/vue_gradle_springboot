@@ -7,5 +7,6 @@
 
     <include file="classpath:database/changelog/2019-06-23-smallsnail-wh.sql"/>
     <include file="classpath:database/changelog/2019-07-11-smallsnail-wh.sql"/>
+    <include file="classpath:database/changelog/2019-07-15-smallsnail-wh.sql"/>
 
 </databaseChangeLog>
