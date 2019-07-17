@@ -161,7 +161,7 @@ export default {
   white-space:nowrap;
 }
 .user-name {
-  max-width: 60px;
+  max-width: 3.6rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -193,8 +193,8 @@ export default {
   height: 12px;
   border-radius: 50%;
   background-color: #e0e0e0;
-  margin-top: 6px;
-  margin-left: 8px;
-  margin-right: 8px;
+  margin-top: 0.42rem;
+  margin-left: 0.15rem;
+  margin-right: 0.15rem;
 }
 </style>

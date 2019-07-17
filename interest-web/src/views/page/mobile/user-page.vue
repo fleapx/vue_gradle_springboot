@@ -166,7 +166,7 @@ export default {
 </script>
 <style scoped>
 .user-name {
-  max-width: 60px;
+  max-width: 3.8rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -295,9 +295,9 @@ export default {
     height: 12px;
     border-radius: 50%;
     background-color: #e0e0e0;
-    margin-top: 6px;
-    margin-left: 8px;
-    margin-right: 8px;
+    margin-top: 0.42rem;
+    margin-left: 0.15rem;
+    margin-right: 0.15rem;
   }
   .paging {
     padding: 10px;
