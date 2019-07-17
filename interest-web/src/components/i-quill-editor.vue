@@ -160,12 +160,14 @@
                     title: '图片格式不对',
                     message: '图片格式只能为jpeg,png'
                 });
+                return false;
               }
               if (!sizeVerify) {
                 this.$notify.warning({
                     title: '图片太大',
                     message: '上传图片最大为1M,请优化后在上传。可使用https://zhitu.isux.us/网站优化'
                 });
+                return false;
               }
               this.loading = this.$loading({
                 lock: true,
