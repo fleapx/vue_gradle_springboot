@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.dao.NoticeDao">
+    <resultMap id="noticeMap" type="com.interest.model.entity.NoticeEntity">
+        <id column="id" property="id"/>
+        <result column="form" property="form"/>
+        <result column="image" property="image"/>
+        <result column="content" property="content"/>
+        <result column="url" property="url"/>
+        <result column="del" property="del"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="noticeVO" type="com.interest.model.response.NoticeVO">
+        <id column="id" property="id"/>
+        <result column="form" property="form"/>
+        <result column="image" property="image"/>
+        <result column="content" property="content"/>
+        <result column="url" property="url"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="addNotice" parameterType="NoticeEntity">
+        insert into notice (form, image, content, url, create_time, update_time)
+        values (#{form}, #{image}, #{content}, #{url}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateNotice" parameterType="NoticeEntity">
+        update notice set
+        image = #{image},
+        content = #{content},
+        url = #{url},
+        update_time = #{updateTime}
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <update id="delNotice">
+        update notice
+        set del = 1
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <select id="getNoticeList" resultMap="noticeVO">
+        select * from notice
+        <where>
+            del = #{del}
+            <if test="form != null">
+                and form = #{form}
+            </if>
+        </where>
+        order by update_time desc
+        <if test="page != null">
+            limit #{page.start},#{page.pageSize}
+        </if>
+    </select>
+
+    <select id="getNoticeSize" resultType="Integer">
+        select count(1) from notice
+        <where>
+            del = #{del}
+            <if test="form != null">
+                and form = #{form}
+            </if>
+        </where>
+    </select>
+
+    <select id="getNotices" resultMap="noticeVO">
+        select * from notice
+        <where>
+            del = 0
+            and form = #{form}
+        </where>
+    </select>
+
+</mapper>

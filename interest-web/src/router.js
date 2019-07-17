@@ -301,6 +301,14 @@ const routers = [
         meta: {
           title: "log"
         }
+      },
+      {
+        path: "notice",
+        name: "notice",
+        component: resolve => require(["./views/console/notice/notice.vue"], resolve),
+        meta: {
+          title: "notice"
+        }
       }
     ]
   },

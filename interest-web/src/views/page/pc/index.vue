@@ -363,7 +363,7 @@ export default {
 </script>
 <style scoped>
 .index {
-  min-width: 1000px;
+  min-width: 1200px;
   background: #f5f7f9;
 }
 .login {
