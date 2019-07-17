@@ -18,5 +18,5 @@ CREATE TABLE `notice` (
 
 INSERT INTO `sys_menu` (`id`, `name`, `parent_id`, `sort`, `icon`) VALUES ('17', '日志管理', '0', '6', 'el-icon-info');
 INSERT INTO `sys_menu` (`id`, `name`, `url`, `parent_id`, `sort`, `icon`) VALUES ('18', '错误日志', '/base/log', '17', '1', 'el-icon-warning');
-INSERT INTO `interest_test`.`sys_menu` (`id`, `name`, `parent_id`, `sort`, `icon`) VALUES ('19', '公告管理', '0', '6', 'el-icon-message-solid');
-INSERT INTO `interest_test`.`sys_menu` (`id`, `name`, `url`, `parent_id`, `sort`, `icon`) VALUES ('20', '公告', '/base/notice', '19', '1', 'el-icon-bell');
+INSERT INTO `sys_menu` (`id`, `name`, `parent_id`, `sort`, `icon`) VALUES ('19', '公告管理', '0', '6', 'el-icon-message-solid');
+INSERT INTO `sys_menu` (`id`, `name`, `url`, `parent_id`, `sort`, `icon`) VALUES ('20', '公告', '/base/notice', '19', '1', 'el-icon-bell');
