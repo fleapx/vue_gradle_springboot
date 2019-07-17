@@ -62,7 +62,7 @@
                 <i class="el-icon-message-solid"></i>
                 公告栏
               </div>
-              <el-carousel height="60px" direction="vertical">
+              <el-carousel height="60px" direction="vertical" indicator-position="none">
                 <el-carousel-item v-for="item in textNoticeList" :key="item.id">
                   <p>{{item.content}}</p>
                 </el-carousel-item>
