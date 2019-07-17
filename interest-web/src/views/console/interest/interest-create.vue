@@ -1,6 +1,6 @@
 <template>
   <div class="interest-layout">
-    <el-form ref="entity" :model="entity" :rules="ruleNew" :label-width="80" label-position="top">
+    <el-form ref="entity" :model="entity" :rules="ruleNew" label-width="80px" label-position="top">
       <el-form-item label="标题：" prop="title">
           <el-input class="title" v-model="entity.title"/>
       </el-form-item>
@@ -126,21 +126,15 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
+    handleSuccess(res, file) {
+      this.entity.image = res.data.url;
+    },
     /*entity实体初始化*/
     initEntity() {
       this.entity.title = null;
       this.entity.info = null;
       this.entity.image = null;
       this.entity.content = null;
-    },
-    handleSuccess(res, file) {
-      this.entity.image = res.data.url;
-    },
-    handleFormatError(file) {
-      this.$Notice.warning({
-        title: "图片格式不对",
-        desc: "图片格式只能为jpg,jpeg,png"
-      });
     },
     submit(entity) {
       this.$refs[entity].validate(valid => {
