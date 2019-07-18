@@ -81,7 +81,8 @@
               <el-row :span="24" v-for="item in pictureNoticeList" :key="item.id" class="picture-notice">
                 <el-col :span="8">
                   <a :href="item.url" target="_blank">
-                    <el-image :src="item.image" :fit="fit"></el-image>
+                    <img width="100%" :src="item.image">
+                    <!-- <el-image :src="item.image" :fit="fit"></el-image> -->
                   </a>
                 </el-col>
                 <el-col :span="16" class="article-title">
