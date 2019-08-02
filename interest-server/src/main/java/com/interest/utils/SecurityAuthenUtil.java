@@ -16,13 +16,13 @@ public class SecurityAuthenUtil {
 		return Integer.valueOf(authenUser.getUsername());
 	}
 
-	public static int getIdWithoutException() {
+	public static Integer getIdWithoutException() {
 		try {
 			Authentication authenObj = SecurityContextHolder.getContext().getAuthentication();
 			User authenUser = (User)authenObj.getPrincipal();
 			return Integer.valueOf(authenUser.getUsername());
 		}catch (Exception ex){
-			return 0;
+			return null;
 		}
 
 	}

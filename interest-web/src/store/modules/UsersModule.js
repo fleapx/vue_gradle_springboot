@@ -1,5 +1,6 @@
 import axios from "axios";
 import iView from "iview";
+import qs from 'qs';
 
 export default {
   namespaced: true,
@@ -30,14 +31,17 @@ export default {
   actions: {
     userLogin(context, { user_name, user_password, router }) {
       axios({
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
         method: "post",
         url: "/oauth/token",
-        params: {
+        data: qs.stringify({
           username: user_name,
           password: user_password,
           grant_type: "password",
           scope: "all"
-        },
+        }),
         auth: {
           username: "client",
           password: "secret"
